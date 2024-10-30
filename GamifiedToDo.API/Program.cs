@@ -1,4 +1,3 @@
-using GamifiedToDo.API.Components;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,8 +19,5 @@ app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 app.UseAntiforgery();
-
-app.MapRazorComponents<App>()
-    .AddInteractiveServerRenderMode();
 
 app.Run();
