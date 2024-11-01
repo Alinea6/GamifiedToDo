@@ -1,23 +1,44 @@
 
-var builder = WebApplication.CreateBuilder(args);
+using GamifiedToDo.API;
+using GamifiedToDo.API.Exceptions;
 
-// Add services to the container.
-builder.Services.AddRazorComponents()
-    .AddInteractiveServerComponents();
+var builder = WebApplication.CreateBuilder(args);
+var services = builder.Services;
+var configuration = builder.Configuration;
+
+services.RegisterOptions(configuration);
+services.RegisterComponents();
+services.RegisterExternalServices(configuration);
+services.RegisterSecurityServices(configuration);
+
+services.AddFluentValidation();
+services.AddSwagger();
+
+services.AddControllers(options => options.Filters.Add(new HttpResponseExceptionFilter()));
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Error", createScopeForErrors: true);
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+    app.UseSwagger();
+    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Gamified to do v1"));
+}
+else
+{
     app.UseHsts();
 }
 
 app.UseHttpsRedirection();
+app.UseRouting();
+app.UseAuthentication();
+app.UseAuthorization();
 
-app.UseStaticFiles();
-app.UseAntiforgery();
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+    endpoints.MapFallbackToFile("index.html");
+});
 
 app.Run();
+
+public partial class Program {}
