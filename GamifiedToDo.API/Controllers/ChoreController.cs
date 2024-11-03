@@ -1,3 +1,4 @@
+using System.Collections;
 using GamifiedToDo.Services.App.Int;
 using GamifiedToDo.Services.App.Int.Chores;
 using Microsoft.AspNetCore.Mvc;
@@ -16,7 +17,7 @@ public class ChoreController : ControllerBase
     }
 
     [HttpGet]
-    public Task<ICollection<Chore>> GetUserChores(CancellationToken cancellationToken = default)
+    public Task<IEnumerable<Chore>> GetUserChores(CancellationToken cancellationToken = default)
     {
         return _choreService.GetUserChores(GetUserId(), cancellationToken);
     }

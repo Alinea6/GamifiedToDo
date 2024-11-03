@@ -23,4 +23,8 @@
       <Folder Include="Migrations\" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\GamifiedToDo.Services.App.Dep\GamifiedToDo.Services.App.Dep.csproj" />
+    </ItemGroup>
+
 </Project>

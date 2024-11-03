@@ -13,7 +13,7 @@ public class ChoreService : IChoreService
         _choreRepository = choreRepository;
     }
     
-    public Task<ICollection<Chore>> GetUserChores(string? userId, CancellationToken cancellationToken = default)
+    public Task<IEnumerable<Chore>> GetUserChores(string? userId, CancellationToken cancellationToken = default)
     {
         return _choreRepository.GetUserChores(userId, cancellationToken);
     }
