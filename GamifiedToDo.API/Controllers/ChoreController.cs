@@ -1,4 +1,4 @@
-using System.Collections;
+using GamifiedToDo.API.Models;
 using GamifiedToDo.Services.App.Int;
 using GamifiedToDo.Services.App.Int.Chores;
 using Microsoft.AspNetCore.Mvc;
@@ -26,5 +26,16 @@ public class ChoreController : ControllerBase
     public Task<Chore> GetChoreById(string choreId, CancellationToken cancellationToken = default)
     {
         return _choreService.GetChoreById(choreId, GetUserId(), cancellationToken);
+    }
+
+    [HttpPost]
+    public Task<Chore> AddChore(ChoreUpdateRequest request, CancellationToken cancellationToken = default)
+    {
+        return _choreService.AddChore(new ChoreAddInput
+        {
+            ChoreText = request.ChoreText,
+            UserId = GetUserId(),
+            Status = ChoreStatus.ToDo
+        }, cancellationToken);
     }
 }

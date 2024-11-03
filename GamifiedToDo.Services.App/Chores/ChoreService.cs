@@ -22,4 +22,9 @@ public class ChoreService : IChoreService
     {
         return _choreRepository.GetChoreById(choreId, userId, cancellationToken);
     }
+
+    public Task<Chore> AddChore(ChoreAddInput input, CancellationToken cancellationToken = default)
+    {
+        return _choreRepository.AddChore(input, cancellationToken);
+    }
 }

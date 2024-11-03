@@ -2,6 +2,7 @@ using FluentAssertions;
 using GamifiedToDo.Adapters.Data;
 using GamifiedToDo.Adapters.Data.Repositories;
 using GamifiedToDo.Services.App.Int;
+using GamifiedToDo.Services.App.Int.Chores;
 using NUnit.Framework;
 
 namespace GamifiedToDo.Tests.Unit.Adapters;
@@ -91,5 +92,31 @@ public class ChoreRepositoryTest
         var result = await _sut.GetChoreById(choreId, userId);
 
         result.Status.Should().Be(expectedStatus);
+    }
+
+    [Test]
+    public async Task Add_should_create_chore_and_return_it()
+    {
+        // arrange
+        var originalChoreCount = _context.Chores.Count();
+        var input = new ChoreAddInput
+        {
+            UserId = "fake-user-1",
+            ChoreText = "fake-chore-text",
+            Status = ChoreStatus.ToDo
+        };
+        
+        // act
+        var result = await _sut.AddChore(input);
+        
+        // assert
+        result.Should().BeEquivalentTo(new Chore
+        {
+            Id = result.Id,
+            UserId = input.UserId,
+            ChoreText = input.ChoreText,
+            Status = ChoreStatus.ToDo
+        });
+        _context.Chores.Count().Should().Be(originalChoreCount + 1);
     }
 }
