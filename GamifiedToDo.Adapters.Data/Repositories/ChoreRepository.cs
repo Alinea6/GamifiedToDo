@@ -25,14 +25,7 @@ public class ChoreRepository : IChoreRepository
 
     public async Task<Chore> GetChoreById(string choreId, string? userId, CancellationToken cancellationToken = default)
     {
-        var chore = await _context.Chores
-            .Where(c => c.Id == choreId && c.UserId == userId)
-            .SingleOrDefaultAsync(cancellationToken).ConfigureAwait(false);
-
-        if (chore == null)
-        {
-            throw new Exception($"Chore with id {choreId} for user {userId} was not found");
-        }
+        var chore = await GetChoreByIdAndUserId(choreId, userId, cancellationToken);
 
         return MapToChore(chore);
     }
@@ -52,6 +45,14 @@ public class ChoreRepository : IChoreRepository
         return MapToChore(chore);
     }
 
+    public async Task DeleteChoreById(string choreId, string? userId, CancellationToken cancellationToken = default)
+    {
+        var chore = await GetChoreByIdAndUserId(choreId, userId, cancellationToken);
+
+        _context.Remove(chore);
+        await _context.SaveChangesAsync(cancellationToken);
+    }
+
     private static Chore MapToChore(Models.Chore input)
     {
         var isParsed = Enum.TryParse(input.Status, out ChoreStatus status);
@@ -62,5 +63,22 @@ public class ChoreRepository : IChoreRepository
             Status = isParsed ? status : ChoreStatus.ToDo,
             ChoreText = input.ChoreText
         };
+    }
+
+    private async Task<Models.Chore> GetChoreByIdAndUserId(
+        string choreId, 
+        string userId, 
+        CancellationToken cancellationToken = default)
+    {
+        var chore = await _context.Chores
+            .Where(c => c.Id == choreId && c.UserId == userId)
+            .SingleOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+
+        if (chore == null)
+        {
+            throw new Exception($"Chore with id {choreId} for user {userId} was not found");
+        }
+
+        return chore;
     }
 }

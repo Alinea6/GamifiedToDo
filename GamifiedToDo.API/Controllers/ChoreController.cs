@@ -38,4 +38,10 @@ public class ChoreController : ControllerBase
             Status = ChoreStatus.ToDo
         }, cancellationToken);
     }
+
+    [HttpDelete("{choreId}")]
+    public Task DeleteChoreById(string choreId, CancellationToken cancellationToken = default)
+    {
+        return _choreService.DeleteChoreById(choreId, GetUserId(), cancellationToken);
+    }
 }

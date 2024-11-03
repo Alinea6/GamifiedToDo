@@ -119,4 +119,16 @@ public class ChoreRepositoryTest
         });
         _context.Chores.Count().Should().Be(originalChoreCount + 1);
     }
+
+    [Test]
+    public async Task DeleteChoreById_should_remove_chore()
+    {
+        var originalChoreCount = _context.Chores.Count();
+        
+        var act = () => _sut.DeleteChoreById("fake-id-1", "fake-user-1");
+
+        await act.Should().NotThrowAsync();
+        _context.Chores.Count().Should().Be(originalChoreCount - 1);
+
+    }
 }

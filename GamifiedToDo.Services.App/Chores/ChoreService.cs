@@ -27,4 +27,9 @@ public class ChoreService : IChoreService
     {
         return _choreRepository.AddChore(input, cancellationToken);
     }
+
+    public Task DeleteChoreById(string choreId, string? userId, CancellationToken cancellationToken = default)
+    {
+        return _choreRepository.DeleteChoreById(choreId, userId, cancellationToken);
+    }
 }
