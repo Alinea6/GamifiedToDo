@@ -12,7 +12,7 @@ internal class DataDesignTimeContextFactory : IDesignTimeDbContextFactory<DataCo
             .SetBasePath(Directory.GetCurrentDirectory())
             .AddJsonFile("appsettings.json")
             .AddJsonFile("appsettings.Development.json", true)
-            .AddUserSecrets("f8d4c80d-ed14-4983-acba-43991396e2d4", true)
+            .AddUserSecrets("225d64c7-c760-40f2-b8b3-37c22a06bd49", true)
             .Build();
 
         var connectionString = configuration.GetConnectionString(nameof(DataContext));
