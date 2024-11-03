@@ -3,7 +3,11 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using GamifiedToDo.Adapters.Data;
 using GamifiedToDo.Adapters.Data.Models;
+using GamifiedToDo.Adapters.Data.Repositories;
 using GamifiedToDo.API.Validators;
+using GamifiedToDo.Services.App.Chores;
+using GamifiedToDo.Services.App.Dep.Chores;
+using GamifiedToDo.Services.App.Int.Chores;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -20,7 +24,9 @@ public static class ExtensionMethods
 
     public static void RegisterComponents(this IServiceCollection services)
     {
-        
+        services
+            .AddScoped<IChoreService, ChoreService>()
+            .AddScoped<IChoreRepository, ChoreRepository>();
     }
 
     public static void RegisterExternalServices(this IServiceCollection services, IConfiguration configuration)
