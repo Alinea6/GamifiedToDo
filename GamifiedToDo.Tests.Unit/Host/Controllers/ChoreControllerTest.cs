@@ -40,6 +40,12 @@ public class ChoreControllerTest
         };*/
     }
 
+    [TearDown]
+    public void TearDown()
+    {
+        _choreServiceMock.VerifyAll();
+    }
+
     [Test]
     public async Task GetUserChores_should_call_chore_service_and_return_list_of_chores()
     {
