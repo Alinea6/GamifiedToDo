@@ -21,6 +21,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\GamifiedToDo.Adapters.Data\GamifiedToDo.Adapters.Data.csproj" />
+      <ProjectReference Include="..\GamifiedToDo.Services.App.Int\GamifiedToDo.Services.App.Int.csproj" />
     </ItemGroup>
 
     <ItemGroup>
