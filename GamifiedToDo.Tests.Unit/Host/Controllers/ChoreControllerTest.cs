@@ -1,8 +1,10 @@
 using System.Security.Claims;
 using FluentAssertions;
 using GamifiedToDo.API.Controllers;
+using GamifiedToDo.API.Models;
 using GamifiedToDo.Services.App.Int;
 using GamifiedToDo.Services.App.Int.Chores;
+using GamifiedToDo.Tests.Unit.Helpers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -84,5 +86,31 @@ public class ChoreControllerTest
         // assert
         result.Should().Be(expected);
     }
-    
+
+    [Test]
+    public async Task AddChore_should_call_chore_service_and_map_request_to_ChoreAddInput()
+    {
+        // arrange
+        var expected = new Chore();
+        var request = new ChoreUpdateRequest
+        {
+            ChoreText = "fake-chore-text"
+        };
+        var input = new ChoreAddInput
+        {
+            UserId = "490987db-6081-42ba-abf6-f09b0bad90b3",
+            ChoreText = "fake-chore-text",
+            Status = ChoreStatus.ToDo
+        };
+
+        _choreServiceMock.Setup(x => x.AddChore(MoqHandler.IsEquivalentTo(input),
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync(expected);
+        
+        // act
+        var result = await _sut.AddChore(request);
+        
+        // assert
+        result.Should().Be(expected);
+    }
 }

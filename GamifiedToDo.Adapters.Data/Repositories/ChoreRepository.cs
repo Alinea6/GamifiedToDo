@@ -1,5 +1,6 @@
 using GamifiedToDo.Services.App.Dep.Chores;
 using GamifiedToDo.Services.App.Int;
+using GamifiedToDo.Services.App.Int.Chores;
 using Microsoft.EntityFrameworkCore;
 
 namespace GamifiedToDo.Adapters.Data.Repositories;
@@ -33,6 +34,21 @@ public class ChoreRepository : IChoreRepository
             throw new Exception($"Chore with id {choreId} for user {userId} was not found");
         }
 
+        return MapToChore(chore);
+    }
+
+    public async Task<Chore> AddChore(ChoreAddInput input, CancellationToken cancellationToken = default)
+    {
+        var chore = new Models.Chore
+        {
+            Id = Guid.NewGuid().ToString(),
+            UserId = input.UserId,
+            ChoreText = input.ChoreText,
+            Status = input.Status.ToString()
+        };
+
+        _context.Add(chore);
+        await _context.SaveChangesAsync(cancellationToken);
         return MapToChore(chore);
     }
 

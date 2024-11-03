@@ -2,6 +2,7 @@ using FluentAssertions;
 using GamifiedToDo.Services.App.Chores;
 using GamifiedToDo.Services.App.Dep.Chores;
 using GamifiedToDo.Services.App.Int;
+using GamifiedToDo.Services.App.Int.Chores;
 using Moq;
 using NUnit.Framework;
 
@@ -63,6 +64,21 @@ public class ChoreServiceTest
         var result = await _sut.GetChoreById(choreId, userId);
         
         // assert
+        result.Should().Be(expected);
+    }
+
+    [Test]
+    public async Task AddChore_should_call_chore_repository_and_return_chore()
+    {
+        // arrange
+        var input = new ChoreAddInput();
+        var expected = new Chore();
+
+        _choreRepositoryMock.Setup(x => x.AddChore(input, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(expected);
+
+        var result = await _sut.AddChore(input);
+
         result.Should().Be(expected);
     }
 }
