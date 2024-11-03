@@ -14,6 +14,7 @@ namespace GamifiedToDo.Tests.Unit.Host.Controllers;
 
 public class ChoreControllerTest
 {
+    private string UserId = "490987db-6081-42ba-abf6-f09b0bad90b3";
     private ChoreController _sut;
     private Mock<IChoreService> _choreServiceMock;
 
@@ -61,7 +62,7 @@ public class ChoreControllerTest
             }
         };
 
-        _choreServiceMock.Setup(x => x.GetUserChores("490987db-6081-42ba-abf6-f09b0bad90b3", It.IsAny<CancellationToken>()))
+        _choreServiceMock.Setup(x => x.GetUserChores(UserId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(expected);
         
         // act
@@ -77,7 +78,7 @@ public class ChoreControllerTest
         // arrange
         var expected = new Chore();
         
-        _choreServiceMock.Setup(x => x.GetChoreById("fake-chore-id", "490987db-6081-42ba-abf6-f09b0bad90b3",It.IsAny<CancellationToken>()))
+        _choreServiceMock.Setup(x => x.GetChoreById("fake-chore-id", UserId,It.IsAny<CancellationToken>()))
             .ReturnsAsync(expected);
         
         // act
@@ -98,7 +99,7 @@ public class ChoreControllerTest
         };
         var input = new ChoreAddInput
         {
-            UserId = "490987db-6081-42ba-abf6-f09b0bad90b3",
+            UserId = UserId,
             ChoreText = "fake-chore-text",
             Status = ChoreStatus.ToDo
         };
@@ -112,5 +113,18 @@ public class ChoreControllerTest
         
         // assert
         result.Should().Be(expected);
+    }
+
+    [Test]
+    public async Task DeleteChoreById_should_call_chore_service()
+    {
+        var choreId = "fake-chore-id";
+
+        _choreServiceMock.Setup(x => x.DeleteChoreById(choreId, UserId, It.IsAny<CancellationToken>()))
+            .Returns(Task.CompletedTask);
+
+        var act = () => _sut.DeleteChoreById(choreId);
+
+        await act.Should().NotThrowAsync();
     }
 }

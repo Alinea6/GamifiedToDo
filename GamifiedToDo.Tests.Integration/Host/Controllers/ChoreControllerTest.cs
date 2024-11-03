@@ -27,7 +27,15 @@ public partial class ChoreControllerTest
     }
 
     [Test]
-    public async Task GetUserChores_should_return_list_of_chores()
+    public async Task ChoreController_should_add_delete_and_get_chore()
+    {
+        var choreId = await AddChoreShouldAddChoreToDbAndReturnIt();
+        await GetUserChoresShouldReturnListOfChores();
+        await GetChoreByIdShouldReturnChore(choreId);
+        await DeleteChoreByIdShouldRemoveChore(choreId);
+    }
+
+    private async Task GetUserChoresShouldReturnListOfChores()
     {
         var response = await _client.GetAsync("api/chore");
         var responseString = await response.Content.ReadAsStringAsync();
@@ -35,19 +43,16 @@ public partial class ChoreControllerTest
 
         result.Should().NotBeNull();
     }
-
-    [Test]
-    public async Task GetChoreById_should_return_chore()
+    public async Task GetChoreByIdShouldReturnChore(string choreId)
     {
-        var response = await _client.GetAsync("api/chore/99eeabcb-c420-47ed-93cf-d64d5c342b86");
+        var response = await _client.GetAsync($"api/chore/{choreId}");
         var responseString = await response.Content.ReadAsStringAsync();
         var result = JsonConvert.DeserializeObject<Chore>(responseString);
 
         result.Should().NotBeNull();
     }
 
-    [Test]
-    public async Task AddChore_should_add_chore_to_db_and_return_it()
+    private async Task<string> AddChoreShouldAddChoreToDbAndReturnIt()
     {
         var request = new ChoreUpdateRequest
         {
@@ -62,5 +67,14 @@ public partial class ChoreControllerTest
         var result = JsonConvert.DeserializeObject<Chore>(responseString);
 
         result.Should().NotBeNull();
+
+        return result.Id;
+    }
+
+    private async Task DeleteChoreByIdShouldRemoveChore(string choreId)
+    {
+        var act = () => _client.DeleteAsync($"api/chore/{choreId}");
+
+        await act.Should().NotThrowAsync();
     }
 }

@@ -81,4 +81,18 @@ public class ChoreServiceTest
 
         result.Should().Be(expected);
     }
+
+    [Test]
+    public async Task DeleteChoreById_should_call_chore_repository()
+    {
+        _choreRepositoryMock.Setup(x => x.DeleteChoreById(
+                "fake-chore-id",
+                "fake-user-id",
+                It.IsAny<CancellationToken>()))
+            .Returns(Task.CompletedTask);
+
+        var act = () => _sut.DeleteChoreById("fake-chore-id", "fake-user-id");
+
+        await act.Should().NotThrowAsync();
+    }
 }
