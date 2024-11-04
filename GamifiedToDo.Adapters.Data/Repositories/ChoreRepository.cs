@@ -53,6 +53,18 @@ public class ChoreRepository : IChoreRepository
         await _context.SaveChangesAsync(cancellationToken);
     }
 
+    public async Task<Chore> UpdateChoreById(ChoreUpdateInput input, CancellationToken cancellationToken = default)
+    {
+        var chore = await GetChoreByIdAndUserId(input.Id, input.UserId, cancellationToken);
+        
+        chore.ChoreText = string.IsNullOrEmpty(input.ChoreText) ? chore.ChoreText : input.ChoreText;
+        chore.Status = (input.Status != null ? input.Status.ToString() : chore.Status)!;
+
+        await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+
+        return MapToChore(chore);
+    }
+
     private static Chore MapToChore(Models.Chore input)
     {
         var isParsed = Enum.TryParse(input.Status, out ChoreStatus status);

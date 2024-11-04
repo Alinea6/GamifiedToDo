@@ -93,7 +93,7 @@ public class ChoreControllerTest
     {
         // arrange
         var expected = new Chore();
-        var request = new ChoreUpdateRequest
+        var request = new ChoreAddRequest
         {
             ChoreText = "fake-chore-text"
         };
@@ -126,5 +126,34 @@ public class ChoreControllerTest
         var act = () => _sut.DeleteChoreById(choreId);
 
         await act.Should().NotThrowAsync();
+    }
+
+    [Test]
+    public async Task UpdateChoreById_should_call_chore_service_and_return_chore()
+    {
+        // arrange
+        var expected = new Chore();
+        var request = new ChoreUpdateRequest()
+        {
+            ChoreText = "fake-chore-text",
+            Status = ChoreStatus.ToDo
+        };
+        var input = new ChoreUpdateInput()
+        {
+            Id = "fake-chore-id",
+            UserId = UserId,
+            ChoreText = "fake-chore-text",
+            Status = ChoreStatus.ToDo,
+        };
+
+        _choreServiceMock.Setup(x => x.UpdateChoreById(MoqHandler.IsEquivalentTo(input),
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync(expected);
+        
+        // act
+        var result = await _sut.UpdateChoreById("fake-chore-id", request);
+        
+        // assert
+        result.Should().Be(expected);
     }
 }
