@@ -3,6 +3,7 @@ using GamifiedToDo.Services.App.Chores;
 using GamifiedToDo.Services.App.Dep.Chores;
 using GamifiedToDo.Services.App.Int;
 using GamifiedToDo.Services.App.Int.Chores;
+using GamifiedToDo.Tests.Unit.Helpers;
 using Moq;
 using NUnit.Framework;
 
@@ -94,5 +95,19 @@ public class ChoreServiceTest
         var act = () => _sut.DeleteChoreById("fake-chore-id", "fake-user-id");
 
         await act.Should().NotThrowAsync();
+    }
+
+    [Test]
+    public async Task UpdateChoreById_should_call_chore_repository()
+    {
+        var input = new ChoreUpdateInput();
+        var expected = new Chore();
+
+        _choreRepositoryMock.Setup(x => x.UpdateChoreById(input, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(expected);
+
+        var result = await _sut.UpdateChoreById(input);
+
+        result.Should().Be(expected);
     }
 }

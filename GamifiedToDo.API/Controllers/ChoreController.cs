@@ -29,13 +29,28 @@ public class ChoreController : ControllerBase
     }
 
     [HttpPost]
-    public Task<Chore> AddChore(ChoreUpdateRequest request, CancellationToken cancellationToken = default)
+    public Task<Chore> AddChore(ChoreAddRequest request, CancellationToken cancellationToken = default)
     {
         return _choreService.AddChore(new ChoreAddInput
         {
             ChoreText = request.ChoreText,
             UserId = GetUserId(),
             Status = ChoreStatus.ToDo
+        }, cancellationToken);
+    }
+
+    [HttpPut("{choreId}")]
+    public Task<Chore> UpdateChoreById(
+        string choreId, 
+        ChoreUpdateRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        return _choreService.UpdateChoreById(new ChoreUpdateInput
+        {
+            Id = choreId,
+            UserId = GetUserId(),
+            ChoreText = request.ChoreText,
+            Status = request.Status
         }, cancellationToken);
     }
 

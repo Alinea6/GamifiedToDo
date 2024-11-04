@@ -14,7 +14,7 @@ public partial class ChoreControllerTest
     [TestCase("")]
     public async Task AddChore_should_throw_exception_when_ChoreText_is_empty_or_null(string? choreText)
     {
-        var request = new ChoreUpdateRequest
+        var request = new ChoreAddRequest
         {
             ChoreText = choreText
         };

@@ -131,4 +131,51 @@ public class ChoreRepositoryTest
         _context.Chores.Count().Should().Be(originalChoreCount - 1);
 
     }
+    
+    [Test]
+    public async Task DeleteChoreById_should_throw_exception_if_chore_is_not_found()
+    {
+        var act = () => _sut.DeleteChoreById("fake-id-99", "fake-user-99");
+
+        await act.Should().ThrowAsync<Exception>()
+            .WithMessage("Chore with id fake-id-99 for user fake-user-99 was not found");
+    }
+
+    [Test]
+    public async Task UpdateChoreById_should_update_chore()
+    {
+        var input = new ChoreUpdateInput
+        {
+            Id = "fake-id-1",
+            UserId = "fake-user-1",
+            ChoreText = "new-fake-text",
+            Status = ChoreStatus.Done
+        };
+        var expected = new Chore
+        {
+            Id = "fake-id-1",
+            UserId = "fake-user-1",
+            ChoreText = "new-fake-text",
+            Status = ChoreStatus.Done
+        };
+        
+        // act
+        var result = await _sut.UpdateChoreById(input);
+        
+        // assert
+        result.Should().BeEquivalentTo(expected);
+    }
+    
+    [Test]
+    public async Task UpdateChoreById_should_throw_exception_if_chore_is_not_found()
+    {
+        var act = () => _sut.UpdateChoreById(new ChoreUpdateInput
+        {
+            Id = "fake-id-99",
+            UserId = "fake-user-99",
+        });
+
+        await act.Should().ThrowAsync<Exception>()
+            .WithMessage("Chore with id fake-id-99 for user fake-user-99 was not found");
+    }
 }

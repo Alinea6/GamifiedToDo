@@ -32,4 +32,9 @@ public class ChoreService : IChoreService
     {
         return _choreRepository.DeleteChoreById(choreId, userId, cancellationToken);
     }
+
+    public Task<Chore> UpdateChoreById(ChoreUpdateInput input, CancellationToken cancellationToken = default)
+    {
+        return _choreRepository.UpdateChoreById(input, cancellationToken);
+    }
 }

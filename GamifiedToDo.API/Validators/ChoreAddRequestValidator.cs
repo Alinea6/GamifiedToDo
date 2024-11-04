@@ -3,9 +3,9 @@ using GamifiedToDo.API.Models;
 
 namespace GamifiedToDo.API.Validators;
 
-public class ChoreUpdateRequestValidator : AbstractValidator<ChoreUpdateRequest>
+public class ChoreAddRequestValidator : AbstractValidator<ChoreAddRequest>
 {
-    public ChoreUpdateRequestValidator()
+    public ChoreAddRequestValidator()
     {
         RuleFor(x => x.ChoreText).NotEmpty();
     }
