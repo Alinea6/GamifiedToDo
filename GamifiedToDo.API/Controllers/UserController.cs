@@ -1,4 +1,5 @@
 using GamifiedToDo.API.Models;
+using GamifiedToDo.API.Models.Users;
 using GamifiedToDo.Services.App.Int.Users;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,6 +24,16 @@ public class UserController : ControllerBase
             Login = request.Login,
             Password = request.Password,
             Email = request.Email
+        }, cancellationToken);
+    }
+    
+    [HttpPost("login")]
+    public Task<string> Login(LoginRequest request, CancellationToken cancellationToken = default)
+    {
+        return _userService.Login(new LoginInput
+        {
+            Login = request.Login,
+            Password = request.Password
         }, cancellationToken);
     }
 }

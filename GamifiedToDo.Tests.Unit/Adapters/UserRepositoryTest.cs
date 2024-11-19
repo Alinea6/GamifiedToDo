@@ -1,7 +1,10 @@
+using System.IdentityModel.Tokens.Jwt;
 using FluentAssertions;
 using GamifiedToDo.Adapters.Data;
+using GamifiedToDo.Adapters.Data.Models;
 using GamifiedToDo.Adapters.Data.Repositories;
 using GamifiedToDo.Services.App.Int.Users;
+using GamifiedToDo.Tests.Unit.Helpers;
 using Moq;
 using NUnit.Framework;
 
@@ -44,5 +47,55 @@ public class UserRepositoryTest
         
         // assert
         _context.Users.Count().Should().Be(originalContextUsersCount + 1);
+    }
+    
+    [Test]
+    public async Task Login_should_find_user_with_login_and_password_generate_token_and_return_it()
+    {
+        // arrange
+        var user = new User
+        {
+            Id = "fake-user-5",
+            Login = "fake-login-1",
+            Password = "fake-password-1",
+            Email = "fake-email-1",
+        };
+        var token = new JwtSecurityToken();
+
+        _jwtProviderMock.Setup(x => x.GenerateToken(MoqHandler.IsEquivalentTo(user)))
+            .Returns(token);
+        
+        // act
+        var result = await _sut.Login(new LoginInput
+        {
+            Login = "fake-login-1",
+            Password = "fake-password-1"
+        });
+        
+        // assert
+        result.Should().NotBeEmpty();
+    }
+    
+    [Test]
+    public async Task Login_should_throw_error_when_login_or_password_is_incorrect()
+    {
+        // arrange
+        var user = new User
+        {
+            Id = "fake-id-1",
+            Login = "fake-login-1",
+            Password = "fake-password-1"
+        };
+
+        
+        // act
+        var act = () => _sut.Login(new LoginInput
+        {
+            Login = "fake-login-99",
+            Password = "fake-password-99"
+        });
+        
+        // assert
+        await act.Should().ThrowAsync<Exception>().WithMessage("Incorrect login or password");
     }
 }

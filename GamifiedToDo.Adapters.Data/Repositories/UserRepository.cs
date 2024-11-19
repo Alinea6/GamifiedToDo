@@ -1,5 +1,7 @@
+using System.IdentityModel.Tokens.Jwt;
 using GamifiedToDo.Services.App.Dep.Users;
 using GamifiedToDo.Services.App.Int.Users;
+using Microsoft.EntityFrameworkCore;
 
 namespace GamifiedToDo.Adapters.Data.Repositories;
 
@@ -28,5 +30,21 @@ public class UserRepository : IUserRepository
         await _dataContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         
         return user.Id;
+    }
+    
+    public async Task<string> Login(LoginInput input, CancellationToken cancellationToken = default)
+    {
+        var user = await _dataContext.Users
+            .Where(x => x.Login == input.Login && x.Password == input.Password)
+            .SingleOrDefaultAsync(cancellationToken);
+
+        if (user == null)
+        {
+            throw new Exception("Incorrect login or password");
+        }
+
+        JwtSecurityToken jwtSecurityToken = _jwtProvider.GenerateToken(user);
+
+        return new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
     }
 }

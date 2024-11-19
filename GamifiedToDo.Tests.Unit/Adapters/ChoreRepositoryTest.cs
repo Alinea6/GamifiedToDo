@@ -27,22 +27,22 @@ public class ChoreRepositoryTest
         {
             new()
             {
-                Id = "fake-id-1",
-                UserId = "fake-user-1",
-                ChoreText = "fake-chore-text-1",
-                Status = ChoreStatus.ToDo
+                Id = "fake-chore-id-1",
+                Status = ChoreStatus.ToDo,
+                UserId = "fake-user-5",
+                ChoreText = "fake-chore-text-1"
             },
             new()
             {
-                Id = "fake-id-2",
-                UserId = "fake-user-1",
-                ChoreText = "fake-chore-text-2",
-                Status = ChoreStatus.Done
+                Id = "fake-chore-id-3",
+                Status = ChoreStatus.ToDo,
+                UserId = "fake-user-5",
+                ChoreText = "fake-chore-text-3"
             }
         };
         
         // act
-        var result = await _sut.GetUserChores("fake-user-1");
+        var result = await _sut.GetUserChores("fake-user-5");
         
         // assert
         result.Should().BeEquivalentTo(expected);
@@ -70,20 +70,20 @@ public class ChoreRepositoryTest
     {
         var expected = new Chore
         {
-            Id = "fake-id-1",
-            UserId = "fake-user-1",
+            Id = "fake-chore-id-1",
+            UserId = "fake-user-5",
             ChoreText = "fake-chore-text-1",
             Status = ChoreStatus.ToDo
         };
         
-        var result = await _sut.GetChoreById("fake-id-1", "fake-user-1");
+        var result = await _sut.GetChoreById("fake-chore-id-1", "fake-user-5");
 
         result.Should().BeEquivalentTo(expected);
     }
 
-    [TestCase("fake-id-1", "fake-user-1", ChoreStatus.ToDo)]
-    [TestCase("fake-id-2", "fake-user-1", ChoreStatus.Done)]
-    [TestCase("fake-id-3", "fake-user-2", ChoreStatus.ToDo)]
+    [TestCase("fake-chore-id-1", "fake-user-5", ChoreStatus.ToDo)]
+    [TestCase("fake-chore-id-2", "fake-user-6", ChoreStatus.Done)]
+    [TestCase("fake-chore-id-3", "fake-user-5", ChoreStatus.ToDo)]
     public async Task GetChoreById_should_return_correctly_mapped_chore_status(
         string choreId, 
         string userId, 
@@ -101,7 +101,7 @@ public class ChoreRepositoryTest
         var originalChoreCount = _context.Chores.Count();
         var input = new ChoreAddInput
         {
-            UserId = "fake-user-1",
+            UserId = "fake-id-5",
             ChoreText = "fake-chore-text",
             Status = ChoreStatus.ToDo
         };
@@ -125,7 +125,7 @@ public class ChoreRepositoryTest
     {
         var originalChoreCount = _context.Chores.Count();
         
-        var act = () => _sut.DeleteChoreById("fake-id-1", "fake-user-1");
+        var act = () => _sut.DeleteChoreById("fake-chore-id-1", "fake-user-5");
 
         await act.Should().NotThrowAsync();
         _context.Chores.Count().Should().Be(originalChoreCount - 1);
@@ -146,15 +146,15 @@ public class ChoreRepositoryTest
     {
         var input = new ChoreUpdateInput
         {
-            Id = "fake-id-1",
-            UserId = "fake-user-1",
+            Id = "fake-chore-id-1",
+            UserId = "fake-user-5",
             ChoreText = "new-fake-text",
             Status = ChoreStatus.Done
         };
         var expected = new Chore
         {
-            Id = "fake-id-1",
-            UserId = "fake-user-1",
+            Id = "fake-chore-id-1",
+            UserId = "fake-user-5",
             ChoreText = "new-fake-text",
             Status = ChoreStatus.Done
         };

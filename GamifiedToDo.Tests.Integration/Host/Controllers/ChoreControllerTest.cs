@@ -2,6 +2,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using FluentAssertions;
 using GamifiedToDo.API.Models;
+using GamifiedToDo.API.Models.Chores;
 using GamifiedToDo.Services.App.Int;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Newtonsoft.Json;

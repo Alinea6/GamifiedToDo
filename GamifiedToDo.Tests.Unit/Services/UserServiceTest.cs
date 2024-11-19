@@ -39,4 +39,20 @@ public class UserServiceTest
 
         result.Should().Be("fake-id");
     }
+    
+    [Test]
+    public async Task Login_should_call_user_repository_and_return_token()
+    {
+        // arrange
+        var input = new LoginInput();
+
+        _userRepositoryMock.Setup(x => x.Login(input, It.IsAny<CancellationToken>()))
+            .ReturnsAsync("fake-token");
+        
+        // act
+        var result = await _sut.Login(input);
+        
+        // assert
+        result.Should().Be("fake-token");
+    }
 }

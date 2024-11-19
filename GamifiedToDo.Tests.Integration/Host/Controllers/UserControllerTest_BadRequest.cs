@@ -2,6 +2,7 @@ using System.Net;
 using System.Text;
 using FluentAssertions;
 using GamifiedToDo.API.Models;
+using GamifiedToDo.API.Models.Users;
 using Newtonsoft.Json;
 using NUnit.Framework;
 
@@ -140,6 +141,44 @@ public partial class UserControllerTest
         var data = new StringContent(json, Encoding.UTF8, "application/json");
 
         var response = await _client.PostAsync("api/user/register", data);
+
+
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
+    
+    [TestCase(null)]
+    [TestCase("")]
+    public async Task Login_should_throw_exception_when_login_is_empty(string login)
+    {
+        var request = new LoginRequest
+        {
+            Login = login,
+            Password = "test-password"
+        };
+
+        var json = JsonConvert.SerializeObject(request);
+        var data = new StringContent(json, Encoding.UTF8, "application/json");
+
+        var response = await _client.PostAsync("api/user/login", data);
+
+
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
+    
+    [TestCase(null)]
+    [TestCase("")]
+    public async Task Login_should_throw_exception_when_password_is_empty(string password)
+    {
+        var request = new LoginRequest
+        {
+            Login = "test-login",
+            Password = password
+        };
+
+        var json = JsonConvert.SerializeObject(request);
+        var data = new StringContent(json, Encoding.UTF8, "application/json");
+
+        var response = await _client.PostAsync("api/user/login", data);
 
 
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);

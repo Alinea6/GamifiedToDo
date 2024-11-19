@@ -1,6 +1,7 @@
 using FluentAssertions;
 using GamifiedToDo.API.Controllers;
 using GamifiedToDo.API.Models;
+using GamifiedToDo.API.Models.Users;
 using GamifiedToDo.Services.App.Int.Users;
 using GamifiedToDo.Tests.Unit.Helpers;
 using Moq;
@@ -51,5 +52,30 @@ public class UserControllerTest
         
         // assert
         result.Should().Be("fake-id");
+    }
+    
+    [Test]
+    public async Task Login_should_map_request_to_input_call_user_service_and_return_token()
+    {
+        // arrange
+        var request = new LoginRequest
+        {
+            Login = "fake-login",
+            Password = "fake-password"
+        };
+        var input = new LoginInput
+        {
+            Login = "fake-login",
+            Password = "fake-password"
+        };
+
+        _userServiceMock.Setup(x => x.Login(MoqHandler.IsEquivalentTo(input), It.IsAny<CancellationToken>()))
+            .ReturnsAsync("fake-token");
+        
+        // act
+        var result = await _sut.Login(request);
+        
+        // assert
+        result.Should().Be("fake-token");
     }
 }

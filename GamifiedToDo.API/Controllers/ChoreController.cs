@@ -1,4 +1,5 @@
 using GamifiedToDo.API.Models;
+using GamifiedToDo.API.Models.Chores;
 using GamifiedToDo.Services.App.Int;
 using GamifiedToDo.Services.App.Int.Chores;
 using Microsoft.AspNetCore.Mvc;

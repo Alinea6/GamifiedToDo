@@ -2,6 +2,7 @@ using System.Net;
 using System.Text;
 using FluentAssertions;
 using GamifiedToDo.API.Models;
+using GamifiedToDo.API.Models.Chores;
 using GamifiedToDo.Services.App.Int;
 using Newtonsoft.Json;
 using NUnit.Framework;

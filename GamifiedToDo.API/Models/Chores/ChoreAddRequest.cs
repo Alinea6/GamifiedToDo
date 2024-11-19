@@ -1,4 +1,4 @@
-namespace GamifiedToDo.API.Models;
+namespace GamifiedToDo.API.Models.Chores;
 
 public class ChoreAddRequest
 {

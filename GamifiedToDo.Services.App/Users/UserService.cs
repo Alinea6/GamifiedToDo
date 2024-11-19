@@ -16,4 +16,9 @@ public class UserService : IUserService
     {
         return _userRepository.Register(input, cancellationToken);
     }
+    
+    public Task<string> Login(LoginInput input, CancellationToken cancellationToken = default)
+    {
+        return _userRepository.Login(input, cancellationToken);
+    }
 }
