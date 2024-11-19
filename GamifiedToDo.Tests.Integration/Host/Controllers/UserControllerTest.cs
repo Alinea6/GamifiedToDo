@@ -2,6 +2,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using FluentAssertions;
 using GamifiedToDo.API.Models;
+using GamifiedToDo.API.Models.Users;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Newtonsoft.Json;
 using NUnit.Framework;
@@ -24,21 +25,45 @@ public partial class UserControllerTest
     
         _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
     }
-
+    
     [Test]
-    public async Task Register_should_return_user_id()
+    public async Task UserController_should_register_and_login_user()
+    {
+        var userLogin = await RegisterShouldReturnUserId();
+        await LoginShouldReturnToken(userLogin);
+    }
+
+    private async Task<string> RegisterShouldReturnUserId()
     {
         var request = new RegisterRequest
         {
             Login = Guid.NewGuid().ToString(),
-            Password = "password",
-            Email = "email@example.com"
+            Password = "password"
         };
         
         var json = JsonConvert.SerializeObject(request);
         var data = new StringContent(json, Encoding.UTF8, "application/json");
         
         var response = await _client.PostAsync("api/user/register", data);
+        var responseString = await response.Content.ReadAsStringAsync();
+
+        responseString.Should().NotBeEmpty();
+        responseString.Should().NotBeNull();
+        return responseString;
+    }
+
+    private async Task LoginShouldReturnToken(string login)
+    {
+        var request = new LoginRequest
+        {
+            Login = login,
+            Password = "password"
+        };
+        
+        var json = JsonConvert.SerializeObject(request);
+        var data = new StringContent(json, Encoding.UTF8, "application/json");
+        
+        var response = await _client.PostAsync("api/user/login", data);
         var responseString = await response.Content.ReadAsStringAsync();
 
         responseString.Should().NotBeEmpty();

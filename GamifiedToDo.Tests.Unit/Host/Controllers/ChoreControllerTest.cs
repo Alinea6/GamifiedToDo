@@ -2,6 +2,7 @@ using System.Security.Claims;
 using FluentAssertions;
 using GamifiedToDo.API.Controllers;
 using GamifiedToDo.API.Models;
+using GamifiedToDo.API.Models.Chores;
 using GamifiedToDo.Services.App.Int;
 using GamifiedToDo.Services.App.Int.Chores;
 using GamifiedToDo.Tests.Unit.Helpers;

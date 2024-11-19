@@ -1,5 +1,6 @@
 using FluentValidation;
 using GamifiedToDo.API.Models;
+using GamifiedToDo.API.Models.Chores;
 
 namespace GamifiedToDo.API.Validators;
 
