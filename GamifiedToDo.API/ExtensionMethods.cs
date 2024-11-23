@@ -57,11 +57,11 @@ public static class ExtensionMethods
                     ValidateAudience = true,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
-                    ValidIssuer = configuration["JSONWebTokensSettings:Issuer"],
-                    ValidAudience = configuration["JSONWebTokensSettings:Audience"],
+                    ValidIssuer = configuration["JsonWebTokenSettings:Issuer"],
+                    ValidAudience = configuration["JsonWebTokenSettings:Audience"],
                     IssuerSigningKey =
                         new SymmetricSecurityKey(
-                            Encoding.UTF8.GetBytes(configuration["JSONWebTokensSettings:Key"] ?? string.Empty))
+                            Encoding.UTF8.GetBytes(configuration["JsonWebTokenSettings:Key"] ?? string.Empty))
                 };
             });
     }

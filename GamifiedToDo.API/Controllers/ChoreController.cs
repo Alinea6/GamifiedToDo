@@ -1,11 +1,12 @@
-using GamifiedToDo.API.Models;
 using GamifiedToDo.API.Models.Chores;
 using GamifiedToDo.Services.App.Int;
 using GamifiedToDo.Services.App.Int.Chores;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GamifiedToDo.API.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class ChoreController : ControllerBase
@@ -32,10 +33,11 @@ public class ChoreController : ControllerBase
     [HttpPost]
     public Task<Chore> AddChore(ChoreAddRequest request, CancellationToken cancellationToken = default)
     {
+        var userId = GetUserId();
         return _choreService.AddChore(new ChoreAddInput
         {
             ChoreText = request.ChoreText,
-            UserId = GetUserId(),
+            UserId = userId,
             Status = ChoreStatus.ToDo
         }, cancellationToken);
     }
