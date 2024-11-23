@@ -1,7 +1,6 @@
 using System.Security.Claims;
 using FluentAssertions;
 using GamifiedToDo.API.Controllers;
-using GamifiedToDo.API.Models;
 using GamifiedToDo.API.Models.Chores;
 using GamifiedToDo.Services.App.Int;
 using GamifiedToDo.Services.App.Int.Chores;
@@ -15,7 +14,7 @@ namespace GamifiedToDo.Tests.Unit.Host.Controllers;
 
 public class ChoreControllerTest
 {
-    private string UserId = "490987db-6081-42ba-abf6-f09b0bad90b3";
+    private string UserId = "fake-user-id";
     private ChoreController _sut;
     private Mock<IChoreService> _choreServiceMock;
 
@@ -25,23 +24,21 @@ public class ChoreControllerTest
         _choreServiceMock = new Mock<IChoreService>(MockBehavior.Strict);
         _sut = new ChoreController(_choreServiceMock.Object);
         
-        
-        //TODO: Uncomment after adding user controller and fix user ids in tests
-        /*var context = new DefaultHttpContext();
+         var context = new DefaultHttpContext();
 
-        var claims = new List<Claim>
-        {
-            new(ClaimTypes.Name, "fake-user-id"),
-        };
-        var identity = new ClaimsIdentity(claims, "TestAuthType");
-        var claimsPrincipal = new ClaimsPrincipal(identity);
+         var claims = new List<Claim>
+         {
+             new(ClaimTypes.Name, "fake-user-id"),
+         };
+         var identity = new ClaimsIdentity(claims, "TestAuthType");
+         var claimsPrincipal = new ClaimsPrincipal(identity);
 
-        context.User = claimsPrincipal;
+         context.User = claimsPrincipal;
 
-        _sut.ControllerContext = new ControllerContext
-        {
-            HttpContext = context
-        };*/
+         _sut.ControllerContext = new ControllerContext
+         {
+             HttpContext = context
+         };
     }
 
     [TearDown]

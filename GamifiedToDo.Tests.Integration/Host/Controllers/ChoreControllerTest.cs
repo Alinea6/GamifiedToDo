@@ -1,7 +1,6 @@
 using System.Net.Http.Headers;
 using System.Text;
 using FluentAssertions;
-using GamifiedToDo.API.Models;
 using GamifiedToDo.API.Models.Chores;
 using GamifiedToDo.Services.App.Int;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -22,7 +21,7 @@ public partial class ChoreControllerTest
         {
         });
         _client = _clientApiFactory.CreateClient();
-        var token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiNzZlOWQ3NDktOTQ0Yy00OGM3LTg1NDUtOTAzMTNhZGU1ZTc4IiwiZXhwIjoxODAxMjU5NTYyLCJpc3MiOiJOb3Rlc1dpdGhUYWdzLkFQSSIsImF1ZCI6Ik5vdGVzV2l0aFRhZ3NVc2VycyJ9.2nGzD3k5p-FwIWzQQxaHnnG5nw7J1SkYOmd1aO5U50A";
+        var token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiYmVjZjdjNzktNThiZS00ZjZjLWEzNDMtNmZlYjJhNTIwZGQxIiwiZXhwIjoyMjA1NjY1MzQ1LCJpc3MiOiJHYW1pZmllZFRvRG8uQVBJIiwiYXVkIjoiR2FtaWZpZWRUb0RvVXNlcnMifQ.wHRCjS9AORM6sl1BwkUG_NPC8sWj_ALCB91_NKD81Gg";
     
         _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
     }
