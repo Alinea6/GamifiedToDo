@@ -9,7 +9,7 @@ namespace GamifiedToDo.Adapters.Data.Repositories;
 
 public interface IJsonWebTokenProvider
 {
-    JwtSecurityToken GenerateToken(User user);
+    JwtSecurityToken GenerateToken(string userId);
 }
 
 public class JsonWebTokenProvider : IJsonWebTokenProvider
@@ -21,11 +21,11 @@ public class JsonWebTokenProvider : IJsonWebTokenProvider
         _jwtSettings = jwtSettings.Value;
     }
     
-    public JwtSecurityToken GenerateToken(User user)
+    public JwtSecurityToken GenerateToken(string userId)
     {
         var claims = new[]
         {
-            new Claim(JwtRegisteredClaimNames.Name, user.Id)
+            new Claim(JwtRegisteredClaimNames.Name, userId)
         };
         
         var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Key));

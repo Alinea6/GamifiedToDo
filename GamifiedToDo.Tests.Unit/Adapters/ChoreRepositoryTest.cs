@@ -31,7 +31,8 @@ public class ChoreRepositoryTest
                 Status = ChoreStatus.ToDo,
                 UserId = "fake-user-5",
                 ChoreText = "fake-chore-text-1",
-                Difficulty = ChoreDifficulty.Simple
+                Difficulty = ChoreDifficulty.Simple,
+                Category = ChoreCategory.SelfImprovement
             },
             new()
             {
@@ -39,7 +40,8 @@ public class ChoreRepositoryTest
                 Status = ChoreStatus.ToDo,
                 UserId = "fake-user-5",
                 ChoreText = "fake-chore-text-3",
-                Difficulty = ChoreDifficulty.Complex
+                Difficulty = ChoreDifficulty.Complex,
+                Category = ChoreCategory.Cleaning
             }
         };
         
@@ -76,7 +78,8 @@ public class ChoreRepositoryTest
             UserId = "fake-user-5",
             ChoreText = "fake-chore-text-1",
             Status = ChoreStatus.ToDo,
-            Difficulty = ChoreDifficulty.Simple
+            Difficulty = ChoreDifficulty.Simple,
+            Category = ChoreCategory.SelfImprovement
         };
         
         var result = await _sut.GetChoreById("fake-chore-id-1", "fake-user-5");
@@ -107,7 +110,8 @@ public class ChoreRepositoryTest
             UserId = "fake-id-5",
             ChoreText = "fake-chore-text",
             Status = ChoreStatus.ToDo,
-            Difficulty = ChoreDifficulty.Moderate
+            Difficulty = ChoreDifficulty.Moderate,
+            Category = ChoreCategory.Education
         };
         
         // act
@@ -118,6 +122,7 @@ public class ChoreRepositoryTest
         result.ChoreText.Should().Be(input.ChoreText);
         result.Status.Should().Be(input.Status);
         result.Difficulty.Should().Be(input.Difficulty);
+        result.Category.Should().Be(input.Category);
         _context.Chores.Count().Should().Be(originalChoreCount + 1);
     }
 
@@ -150,7 +155,8 @@ public class ChoreRepositoryTest
             Id = "fake-chore-id-1",
             UserId = "fake-user-5",
             ChoreText = "new-fake-text",
-            Difficulty = ChoreDifficulty.Moderate
+            Difficulty = ChoreDifficulty.Moderate,
+            Category = ChoreCategory.Education
         };
         
         // act
@@ -159,6 +165,7 @@ public class ChoreRepositoryTest
         // assert
         result.ChoreText.Should().Be(input.ChoreText);
         result.Difficulty.Should().Be(input.Difficulty);
+        result.Category.Should().Be(input.Category);
     }
     
     [Test]
@@ -189,7 +196,8 @@ public class ChoreRepositoryTest
             UserId = "fake-user-5",
             ChoreText = "fake-chore-text-1",
             Status = ChoreStatus.Done,
-            Difficulty = ChoreDifficulty.Simple
+            Difficulty = ChoreDifficulty.Simple,
+            Category = ChoreCategory.SelfImprovement
         };
         
         // act

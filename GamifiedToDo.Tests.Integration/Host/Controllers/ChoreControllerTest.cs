@@ -61,7 +61,8 @@ public partial class ChoreControllerTest
         var request = new ChoreAddRequest
         {
             ChoreText = "Clean house",
-            Difficulty = ChoreDifficulty.Simple
+            Difficulty = ChoreDifficulty.Simple,
+            Category = ChoreCategory.Cleaning
         };
 
         var json = JsonConvert.SerializeObject(request);
@@ -88,7 +89,8 @@ public partial class ChoreControllerTest
         var request = new ChoreUpdateRequest
         {
             ChoreText = "Clean bathroom",
-            Difficulty = ChoreDifficulty.Moderate
+            Difficulty = ChoreDifficulty.Moderate,
+            Category = ChoreCategory.SelfCare
         };
 
         var json = JsonConvert.SerializeObject(request);

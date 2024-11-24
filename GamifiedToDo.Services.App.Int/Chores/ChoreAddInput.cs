@@ -6,4 +6,5 @@ public class ChoreAddInput
     public string ChoreText { get; set; }
     public ChoreStatus Status { get; set; }
     public ChoreDifficulty Difficulty { get; set; }
+    public ChoreCategory Category { get; set; }
 }

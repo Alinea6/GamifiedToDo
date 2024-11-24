@@ -35,7 +35,8 @@ public static class FakeDbContextProvider
                 Status = "ToDo",
                 UserId = "fake-user-5",
                 ChoreText = "fake-chore-text-1",
-                Difficulty = 1
+                Difficulty = 1,
+                Category = 1
             },
             new Chore
             {
@@ -43,7 +44,8 @@ public static class FakeDbContextProvider
                 Status = "Done",
                 UserId = "fake-user-6",
                 ChoreText = "fake-chore-text-2",
-                Difficulty = 2
+                Difficulty = 2,
+                Category = 2
             },
             new Chore
             {
@@ -51,7 +53,8 @@ public static class FakeDbContextProvider
                 Status = "ToDo",
                 UserId = "fake-user-5",
                 ChoreText = "fake-chore-text-3",
-                Difficulty = 3
+                Difficulty = 3,
+                Category = 3
             }
         ];
     }
