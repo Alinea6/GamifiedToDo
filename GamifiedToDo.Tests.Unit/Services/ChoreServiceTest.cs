@@ -3,6 +3,7 @@ using GamifiedToDo.Services.App.Chores;
 using GamifiedToDo.Services.App.Dep.Chores;
 using GamifiedToDo.Services.App.Int;
 using GamifiedToDo.Services.App.Int.Chores;
+using GamifiedToDo.Services.App.Int.UserLevels;
 using GamifiedToDo.Tests.Unit.Helpers;
 using Moq;
 using NUnit.Framework;
@@ -13,18 +14,21 @@ public class ChoreServiceTest
 {
     private ChoreService _sut;
     private Mock<IChoreRepository> _choreRepositoryMock;
+    private Mock<IUserLevelService> _userLevelServiceMock;
 
     [SetUp]
     public void SetUp()
     {
         _choreRepositoryMock = new Mock<IChoreRepository>(MockBehavior.Strict);
-        _sut = new ChoreService(_choreRepositoryMock.Object);
+        _userLevelServiceMock = new Mock<IUserLevelService>(MockBehavior.Strict);
+        _sut = new ChoreService(_choreRepositoryMock.Object, _userLevelServiceMock.Object);
     }
 
     [TearDown]
     public void TearDown()
     {
         _choreRepositoryMock.VerifyAll();
+        _userLevelServiceMock.VerifyAll();
     }
 
     [Test]
@@ -109,5 +113,32 @@ public class ChoreServiceTest
         var result = await _sut.UpdateChoreById(input);
 
         result.Should().Be(expected);
+    }
+    
+    [Test]
+    public async Task UpdateStatusById_should_call_chore_repository_and_user_level_service()
+    {
+        var input = new ChoreUpdateStatusInput
+        {
+            UserId = "fake-user-id"
+        };
+        var expected = new Chore
+        {
+            Difficulty = ChoreDifficulty.Simple
+        };
+
+        _choreRepositoryMock.Setup(x => x.UpdateStatusById(MoqHandler.IsEquivalentTo(input), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(expected);
+
+        _userLevelServiceMock.Setup(x => x.UpdateExp(
+                input.UserId,
+                1,
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync(10);
+            
+
+        var result = await _sut.UpdateStatusById(input);
+
+        result.Should().BeEquivalentTo(expected);
     }
 }

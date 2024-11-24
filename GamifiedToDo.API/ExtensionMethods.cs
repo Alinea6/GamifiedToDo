@@ -7,9 +7,12 @@ using GamifiedToDo.Adapters.Data.Repositories;
 using GamifiedToDo.API.Validators;
 using GamifiedToDo.Services.App.Chores;
 using GamifiedToDo.Services.App.Dep.Chores;
+using GamifiedToDo.Services.App.Dep.UserLevels;
 using GamifiedToDo.Services.App.Dep.Users;
 using GamifiedToDo.Services.App.Int.Chores;
+using GamifiedToDo.Services.App.Int.UserLevels;
 using GamifiedToDo.Services.App.Int.Users;
+using GamifiedToDo.Services.App.UserLevels;
 using GamifiedToDo.Services.App.Users;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -29,7 +32,9 @@ public static class ExtensionMethods
     {
         services
             .AddScoped<IChoreService, ChoreService>()
-            .AddScoped<IChoreRepository, ChoreRepository>();
+            .AddScoped<IChoreRepository, ChoreRepository>()
+            .AddScoped<IUserLevelService, UserLevelService>()
+            .AddScoped<IUserLevelRepository, UserLevelRepository>();
 
         services
             .AddScoped<IUserService, UserService>()

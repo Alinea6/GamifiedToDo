@@ -1,3 +1,4 @@
+using System.Net;
 using System.Net.Http.Headers;
 using System.Text;
 using FluentAssertions;
@@ -35,7 +36,8 @@ public partial class UserControllerTest
         var request = new RegisterRequest
         {
             Login = Guid.NewGuid().ToString(),
-            Password = "password"
+            Password = "password",
+            Email = "email@example.com"
         };
         
         var json = JsonConvert.SerializeObject(request);
@@ -46,7 +48,8 @@ public partial class UserControllerTest
 
         responseString.Should().NotBeEmpty();
         responseString.Should().NotBeNull();
-        return responseString;
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        return request.Login;
     }
 
     private async Task LoginShouldReturnToken(string login)
@@ -65,5 +68,6 @@ public partial class UserControllerTest
 
         responseString.Should().NotBeEmpty();
         responseString.Should().NotBeNull();
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
     }
 }

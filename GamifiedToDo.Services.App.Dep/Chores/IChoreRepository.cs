@@ -10,4 +10,5 @@ public interface IChoreRepository
     Task<Chore> AddChore(ChoreAddInput input, CancellationToken cancellationToken = default);
     Task DeleteChoreById(string choreId, string? userId, CancellationToken cancellationToken = default);
     Task<Chore> UpdateChoreById(ChoreUpdateInput input, CancellationToken cancellationToken = default);
+    Task<Chore> UpdateStatusById(ChoreUpdateStatusInput input, CancellationToken cancellationToken = default);
 }
