@@ -39,7 +39,8 @@ public class ChoreController : ControllerBase
             ChoreText = request.ChoreText,
             UserId = userId,
             Status = ChoreStatus.ToDo,
-            Difficulty = request.Difficulty
+            Difficulty = request.Difficulty,
+            Category = request.Category
         }, cancellationToken);
     }
 
@@ -54,7 +55,8 @@ public class ChoreController : ControllerBase
             Id = choreId,
             UserId = GetUserId(),
             ChoreText = request.ChoreText,
-            Difficulty = request.Difficulty
+            Difficulty = request.Difficulty,
+            Category = request.Category
         }, cancellationToken);
     }
 

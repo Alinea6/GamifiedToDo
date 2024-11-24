@@ -50,7 +50,7 @@ public class UserRepository : IUserRepository
             throw new Exception("Incorrect login or password");
         }
 
-        JwtSecurityToken jwtSecurityToken = _jwtProvider.GenerateToken(user);
+        JwtSecurityToken jwtSecurityToken = _jwtProvider.GenerateToken(user.Id);
 
         return new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
     }

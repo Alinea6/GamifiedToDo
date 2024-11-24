@@ -57,7 +57,8 @@ public class ChoreControllerTest
             {
                 Id = "fake-chore-id",
                 ChoreText = "fake-chore-text",
-                Difficulty = ChoreDifficulty.Simple
+                Difficulty = ChoreDifficulty.Simple,
+                Category = ChoreCategory.Cleaning
             }
         };
 
@@ -95,14 +96,16 @@ public class ChoreControllerTest
         var request = new ChoreAddRequest
         {
             ChoreText = "fake-chore-text",
-            Difficulty = ChoreDifficulty.Simple
+            Difficulty = ChoreDifficulty.Simple,
+            Category = ChoreCategory.Cleaning
         };
         var input = new ChoreAddInput
         {
             UserId = UserId,
             ChoreText = "fake-chore-text",
             Status = ChoreStatus.ToDo,
-            Difficulty = ChoreDifficulty.Simple
+            Difficulty = ChoreDifficulty.Simple,
+            Category = ChoreCategory.Cleaning
         };
 
         _choreServiceMock.Setup(x => x.AddChore(MoqHandler.IsEquivalentTo(input),
@@ -137,14 +140,16 @@ public class ChoreControllerTest
         var request = new ChoreUpdateRequest()
         {
             ChoreText = "fake-chore-text",
-            Difficulty = ChoreDifficulty.Simple
+            Difficulty = ChoreDifficulty.Simple,
+            Category = ChoreCategory.Cleaning
         };
         var input = new ChoreUpdateInput()
         {
             Id = "fake-chore-id",
             UserId = UserId,
             ChoreText = "fake-chore-text",
-            Difficulty = ChoreDifficulty.Simple
+            Difficulty = ChoreDifficulty.Simple,
+            Category = ChoreCategory.Cleaning
         };
 
         _choreServiceMock.Setup(x => x.UpdateChoreById(MoqHandler.IsEquivalentTo(input),

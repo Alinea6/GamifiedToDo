@@ -38,8 +38,8 @@ public class ChoreRepository : IChoreRepository
             UserId = input.UserId,
             ChoreText = input.ChoreText,
             Status = input.Status.ToString(),
-            Difficulty = (int)input.Difficulty
-        };
+            Difficulty = (int)input.Difficulty,
+            Category = (int)input.Category        };
 
         _context.Add(chore);
         await _context.SaveChangesAsync(cancellationToken);
@@ -60,6 +60,7 @@ public class ChoreRepository : IChoreRepository
         
         chore.ChoreText = input.ChoreText ?? chore.ChoreText;
         chore.Difficulty = input.Difficulty != null ? (int)input.Difficulty : chore.Difficulty;
+        chore.Category = input.Category != null ? (int)input.Category : chore.Category;
 
         await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
@@ -86,7 +87,8 @@ public class ChoreRepository : IChoreRepository
             UserId = input.UserId,
             Status = isParsed ? status : ChoreStatus.ToDo,
             ChoreText = input.ChoreText,
-            Difficulty = (ChoreDifficulty)input.Difficulty
+            Difficulty = (ChoreDifficulty)input.Difficulty,
+            Category = (ChoreCategory)input.Category
         };
     }
 

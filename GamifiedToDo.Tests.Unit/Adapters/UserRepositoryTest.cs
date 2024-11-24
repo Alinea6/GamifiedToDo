@@ -62,7 +62,7 @@ public class UserRepositoryTest
         };
         var token = new JwtSecurityToken();
 
-        _jwtProviderMock.Setup(x => x.GenerateToken(MoqHandler.IsEquivalentTo(user)))
+        _jwtProviderMock.Setup(x => x.GenerateToken(user.Id))
             .Returns(token);
         
         // act

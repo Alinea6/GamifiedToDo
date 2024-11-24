@@ -17,4 +17,6 @@ public class Chore
     public string Status { get; set; }
     
     public int Difficulty { get; set; }
+    
+    public int Category { get; set; }
 }
