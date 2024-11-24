@@ -1,9 +1,9 @@
-using GamifiedToDo.Services.App.Int;
+using GamifiedToDo.Services.App.Int.Chores;
 
 namespace GamifiedToDo.API.Models.Chores;
 
 public class ChoreUpdateRequest
 {
     public string? ChoreText { get; set; }
-    public ChoreStatus? Status { get; set; }
+    public ChoreDifficulty? Difficulty { get; set; }
 }

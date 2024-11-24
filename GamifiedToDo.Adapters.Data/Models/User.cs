@@ -20,4 +20,6 @@ public class User
     [Required]
     [MaxLength(50)]
     public string Email { get; set; }
+    
+    public UserLevel UserLevel { get; set; }
 }

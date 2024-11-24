@@ -1,4 +1,5 @@
 using System.IdentityModel.Tokens.Jwt;
+using GamifiedToDo.Adapters.Data.Models;
 using GamifiedToDo.Services.App.Dep.Users;
 using GamifiedToDo.Services.App.Int.Users;
 using Microsoft.EntityFrameworkCore;
@@ -18,12 +19,18 @@ public class UserRepository : IUserRepository
 
     public async Task<string> Register(RegisterInput input, CancellationToken cancellationToken = default)
     {
+        var userId = Guid.NewGuid().ToString();
         var user = new Models.User
         {
-            Id = Guid.NewGuid().ToString(),
+            Id = userId,
             Login = input.Login,
             Password = input.Password,
-            Email = input.Email
+            Email = input.Email,
+            UserLevel = new UserLevel
+            {
+                Id = userId,
+                Exp = 0
+            }
         };
 
         _dataContext.Add(user);

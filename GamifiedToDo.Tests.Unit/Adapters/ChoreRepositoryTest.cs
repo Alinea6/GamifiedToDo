@@ -30,14 +30,16 @@ public class ChoreRepositoryTest
                 Id = "fake-chore-id-1",
                 Status = ChoreStatus.ToDo,
                 UserId = "fake-user-5",
-                ChoreText = "fake-chore-text-1"
+                ChoreText = "fake-chore-text-1",
+                Difficulty = ChoreDifficulty.Simple
             },
             new()
             {
                 Id = "fake-chore-id-3",
                 Status = ChoreStatus.ToDo,
                 UserId = "fake-user-5",
-                ChoreText = "fake-chore-text-3"
+                ChoreText = "fake-chore-text-3",
+                Difficulty = ChoreDifficulty.Complex
             }
         };
         
@@ -73,7 +75,8 @@ public class ChoreRepositoryTest
             Id = "fake-chore-id-1",
             UserId = "fake-user-5",
             ChoreText = "fake-chore-text-1",
-            Status = ChoreStatus.ToDo
+            Status = ChoreStatus.ToDo,
+            Difficulty = ChoreDifficulty.Simple
         };
         
         var result = await _sut.GetChoreById("fake-chore-id-1", "fake-user-5");
@@ -103,20 +106,18 @@ public class ChoreRepositoryTest
         {
             UserId = "fake-id-5",
             ChoreText = "fake-chore-text",
-            Status = ChoreStatus.ToDo
+            Status = ChoreStatus.ToDo,
+            Difficulty = ChoreDifficulty.Moderate
         };
         
         // act
         var result = await _sut.AddChore(input);
         
         // assert
-        result.Should().BeEquivalentTo(new Chore
-        {
-            Id = result.Id,
-            UserId = input.UserId,
-            ChoreText = input.ChoreText,
-            Status = ChoreStatus.ToDo
-        });
+        result.UserId.Should().Be(input.UserId);
+        result.ChoreText.Should().Be(input.ChoreText);
+        result.Status.Should().Be(input.Status);
+        result.Difficulty.Should().Be(input.Difficulty);
         _context.Chores.Count().Should().Be(originalChoreCount + 1);
     }
 
@@ -149,21 +150,15 @@ public class ChoreRepositoryTest
             Id = "fake-chore-id-1",
             UserId = "fake-user-5",
             ChoreText = "new-fake-text",
-            Status = ChoreStatus.Done
-        };
-        var expected = new Chore
-        {
-            Id = "fake-chore-id-1",
-            UserId = "fake-user-5",
-            ChoreText = "new-fake-text",
-            Status = ChoreStatus.Done
+            Difficulty = ChoreDifficulty.Moderate
         };
         
         // act
         var result = await _sut.UpdateChoreById(input);
         
         // assert
-        result.Should().BeEquivalentTo(expected);
+        result.ChoreText.Should().Be(input.ChoreText);
+        result.Difficulty.Should().Be(input.Difficulty);
     }
     
     [Test]
@@ -173,6 +168,45 @@ public class ChoreRepositoryTest
         {
             Id = "fake-id-99",
             UserId = "fake-user-99",
+        });
+
+        await act.Should().ThrowAsync<Exception>()
+            .WithMessage("Chore with id fake-id-99 for user fake-user-99 was not found");
+    }
+
+    [Test]
+    public async Task UpdateStatusById_should_update_chore_status()
+    {
+        var input = new ChoreUpdateStatusInput
+        {
+            Id = "fake-chore-id-1",
+            UserId = "fake-user-5",
+            Status = ChoreStatus.Done
+        };
+        var expected = new Chore
+        {
+            Id = "fake-chore-id-1",
+            UserId = "fake-user-5",
+            ChoreText = "fake-chore-text-1",
+            Status = ChoreStatus.Done,
+            Difficulty = ChoreDifficulty.Simple
+        };
+        
+        // act
+        var result = await _sut.UpdateStatusById(input);
+        
+        // assert
+        result.Should().BeEquivalentTo(expected);
+    }
+    
+    [Test]
+    public async Task UpdateStatusById_should_throw_exception_if_chore_is_not_found()
+    {
+        var act = () => _sut.UpdateStatusById(new ChoreUpdateStatusInput
+        {
+            Id = "fake-id-99",
+            UserId = "fake-user-99",
+            Status = ChoreStatus.Done
         });
 
         await act.Should().ThrowAsync<Exception>()

@@ -57,6 +57,7 @@ public class ChoreControllerTest
             {
                 Id = "fake-chore-id",
                 ChoreText = "fake-chore-text",
+                Difficulty = ChoreDifficulty.Simple
             }
         };
 
@@ -71,7 +72,7 @@ public class ChoreControllerTest
     }
 
     [Test]
-    public async Task GetChoreById_should_call_chore_service_and_return_chore()
+    public async Task GetById_should_call_chore_service_and_return_chore()
     {
         // arrange
         var expected = new Chore();
@@ -80,26 +81,28 @@ public class ChoreControllerTest
             .ReturnsAsync(expected);
         
         // act
-        var result = await _sut.GetChoreById("fake-chore-id");
+        var result = await _sut.GetById("fake-chore-id");
         
         // assert
         result.Should().Be(expected);
     }
 
     [Test]
-    public async Task AddChore_should_call_chore_service_and_map_request_to_ChoreAddInput()
+    public async Task Add_should_call_chore_service_and_map_request_to_ChoreAddInput()
     {
         // arrange
         var expected = new Chore();
         var request = new ChoreAddRequest
         {
-            ChoreText = "fake-chore-text"
+            ChoreText = "fake-chore-text",
+            Difficulty = ChoreDifficulty.Simple
         };
         var input = new ChoreAddInput
         {
             UserId = UserId,
             ChoreText = "fake-chore-text",
-            Status = ChoreStatus.ToDo
+            Status = ChoreStatus.ToDo,
+            Difficulty = ChoreDifficulty.Simple
         };
 
         _choreServiceMock.Setup(x => x.AddChore(MoqHandler.IsEquivalentTo(input),
@@ -107,41 +110,41 @@ public class ChoreControllerTest
             .ReturnsAsync(expected);
         
         // act
-        var result = await _sut.AddChore(request);
+        var result = await _sut.Add(request);
         
         // assert
         result.Should().Be(expected);
     }
 
     [Test]
-    public async Task DeleteChoreById_should_call_chore_service()
+    public async Task DeleteById_should_call_chore_service()
     {
         var choreId = "fake-chore-id";
 
         _choreServiceMock.Setup(x => x.DeleteChoreById(choreId, UserId, It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
 
-        var act = () => _sut.DeleteChoreById(choreId);
+        var act = () => _sut.DeleteById(choreId);
 
         await act.Should().NotThrowAsync();
     }
 
     [Test]
-    public async Task UpdateChoreById_should_call_chore_service_and_return_chore()
+    public async Task UpdateById_should_call_chore_service_and_return_chore()
     {
         // arrange
         var expected = new Chore();
         var request = new ChoreUpdateRequest()
         {
             ChoreText = "fake-chore-text",
-            Status = ChoreStatus.ToDo
+            Difficulty = ChoreDifficulty.Simple
         };
         var input = new ChoreUpdateInput()
         {
             Id = "fake-chore-id",
             UserId = UserId,
             ChoreText = "fake-chore-text",
-            Status = ChoreStatus.ToDo,
+            Difficulty = ChoreDifficulty.Simple
         };
 
         _choreServiceMock.Setup(x => x.UpdateChoreById(MoqHandler.IsEquivalentTo(input),
@@ -149,7 +152,34 @@ public class ChoreControllerTest
             .ReturnsAsync(expected);
         
         // act
-        var result = await _sut.UpdateChoreById("fake-chore-id", request);
+        var result = await _sut.UpdateById("fake-chore-id", request);
+        
+        // assert
+        result.Should().Be(expected);
+    }
+    
+    [Test]
+    public async Task UpdateStatusById_should_call_chore_service_and_return_chore()
+    {
+        // arrange
+        var expected = new Chore();
+        var request = new ChoreUpdateStatusRequest()
+        {
+            Status = ChoreStatus.Done
+        };
+        var input = new ChoreUpdateStatusInput()
+        {
+            Id = "fake-chore-id",
+            UserId = UserId,
+            Status = ChoreStatus.Done
+        };
+
+        _choreServiceMock.Setup(x => x.UpdateStatusById(MoqHandler.IsEquivalentTo(input),
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync(expected);
+        
+        // act
+        var result = await _sut.UpdateStatusById("fake-chore-id", request);
         
         // assert
         result.Should().Be(expected);

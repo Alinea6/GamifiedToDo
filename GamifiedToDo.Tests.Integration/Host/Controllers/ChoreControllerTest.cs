@@ -3,6 +3,7 @@ using System.Text;
 using FluentAssertions;
 using GamifiedToDo.API.Models.Chores;
 using GamifiedToDo.Services.App.Int;
+using GamifiedToDo.Services.App.Int.Chores;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Newtonsoft.Json;
 using NUnit.Framework;
@@ -21,7 +22,7 @@ public partial class ChoreControllerTest
         {
         });
         _client = _clientApiFactory.CreateClient();
-        var token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiYmVjZjdjNzktNThiZS00ZjZjLWEzNDMtNmZlYjJhNTIwZGQxIiwiZXhwIjoyMjA1NjY1MzQ1LCJpc3MiOiJHYW1pZmllZFRvRG8uQVBJIiwiYXVkIjoiR2FtaWZpZWRUb0RvVXNlcnMifQ.wHRCjS9AORM6sl1BwkUG_NPC8sWj_ALCB91_NKD81Gg";
+        var token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiMTZmZGEwOTEtYjAzMS00M2YxLTk3OGItYzk3YjE3OWNjOGU2IiwiZXhwIjoxODI3MDU3MTQyLCJpc3MiOiJHYW1pZmllZFRvRG8uQVBJIiwiYXVkIjoiR2FtaWZpZWRUb0RvVXNlcnMifQ.Qr31Whi_f42oyicBicJGCfKXSX9WxS4bkHmKhkdDbjo";
     
         _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
     }
@@ -29,11 +30,12 @@ public partial class ChoreControllerTest
     [Test]
     public async Task ChoreController_should_add_delete_and_get_chore()
     {
-        var choreId = await AddChoreShouldAddChoreToDbAndReturnIt();
+        var choreId = await AddShouldAddChoreToDbAndReturnIt();
         await GetUserChoresShouldReturnListOfChores();
-        await GetChoreByIdShouldReturnChore(choreId);
-        await UpdateChoreByIdShouldUpdateChore(choreId);
-        await DeleteChoreByIdShouldRemoveChore(choreId);
+        await GetByIdShouldReturnChore(choreId);
+        await UpdateByIdShouldUpdateChore(choreId);
+        await UpdateStatusByIdShouldUpdateChore(choreId);
+        await DeleteByIdShouldRemoveChore(choreId);
     }
 
     private async Task GetUserChoresShouldReturnListOfChores()
@@ -45,7 +47,7 @@ public partial class ChoreControllerTest
         result.Should().NotBeNull();
     }
     
-    private async Task GetChoreByIdShouldReturnChore(string choreId)
+    private async Task GetByIdShouldReturnChore(string choreId)
     {
         var response = await _client.GetAsync($"api/chore/{choreId}");
         var responseString = await response.Content.ReadAsStringAsync();
@@ -54,11 +56,12 @@ public partial class ChoreControllerTest
         result.Should().NotBeNull();
     }
 
-    private async Task<string> AddChoreShouldAddChoreToDbAndReturnIt()
+    private async Task<string> AddShouldAddChoreToDbAndReturnIt()
     {
         var request = new ChoreAddRequest
         {
-            ChoreText = "Clean house"
+            ChoreText = "Clean house",
+            Difficulty = ChoreDifficulty.Simple
         };
 
         var json = JsonConvert.SerializeObject(request);
@@ -73,25 +76,42 @@ public partial class ChoreControllerTest
         return result.Id;
     }
 
-    private async Task DeleteChoreByIdShouldRemoveChore(string choreId)
+    private async Task DeleteByIdShouldRemoveChore(string choreId)
     {
         var act = () => _client.DeleteAsync($"api/chore/{choreId}");
 
         await act.Should().NotThrowAsync();
     }
 
-    private async Task UpdateChoreByIdShouldUpdateChore(string choreId)
+    private async Task UpdateByIdShouldUpdateChore(string choreId)
     {
         var request = new ChoreUpdateRequest
         {
             ChoreText = "Clean bathroom",
-            Status = ChoreStatus.Done
+            Difficulty = ChoreDifficulty.Moderate
         };
 
         var json = JsonConvert.SerializeObject(request);
         var data = new StringContent(json, Encoding.UTF8, "application/json");
 
         var response = await _client.PutAsync($"api/chore/{choreId}", data);
+        var responseString = await response.Content.ReadAsStringAsync();
+        var result = JsonConvert.DeserializeObject<Chore>(responseString);
+
+        result.Should().NotBeNull();
+    }
+    
+    private async Task UpdateStatusByIdShouldUpdateChore(string choreId)
+    {
+        var request = new ChoreUpdateStatusRequest()
+        {
+            Status = ChoreStatus.Done
+        };
+
+        var json = JsonConvert.SerializeObject(request);
+        var data = new StringContent(json, Encoding.UTF8, "application/json");
+
+        var response = await _client.PutAsync($"api/chore/{choreId}/status", data);
         var responseString = await response.Content.ReadAsStringAsync();
         var result = JsonConvert.DeserializeObject<Chore>(responseString);
 

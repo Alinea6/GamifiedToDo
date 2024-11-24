@@ -15,9 +15,11 @@ public static class FakeDbContextProvider
 
         var chores = GenerateChores();
         var users = GenerateUsers();
+        var userLevels = GenerateUserLevels();
         
         context.Chores.AddRange(chores);
         context.Users.AddRange(users);
+        context.UserLevels.AddRange(userLevels);
         context.SaveChangesAsync();
         
         return context;
@@ -32,21 +34,24 @@ public static class FakeDbContextProvider
                 Id = "fake-chore-id-1",
                 Status = "ToDo",
                 UserId = "fake-user-5",
-                ChoreText = "fake-chore-text-1"
+                ChoreText = "fake-chore-text-1",
+                Difficulty = 1
             },
             new Chore
             {
                 Id = "fake-chore-id-2",
                 Status = "Done",
                 UserId = "fake-user-6",
-                ChoreText = "fake-chore-text-2"
+                ChoreText = "fake-chore-text-2",
+                Difficulty = 2
             },
             new Chore
             {
                 Id = "fake-chore-id-3",
                 Status = "ToDo",
                 UserId = "fake-user-5",
-                ChoreText = "fake-chore-text-3"
+                ChoreText = "fake-chore-text-3",
+                Difficulty = 3
             }
         ];
     }
@@ -68,6 +73,23 @@ public static class FakeDbContextProvider
                 Login = "fake-login-2",
                 Password = "fake-password-2",
                 Email = "fake-email-2"
+            }
+        ];
+    }
+
+    private static UserLevel[] GenerateUserLevels()
+    {
+        return
+        [
+            new UserLevel
+            {
+                Id = "fake-user-5",
+                Exp = 1
+            },
+            new UserLevel
+            {
+                Id = "fake-user-6",
+                Exp = 2
             }
         ];
     }

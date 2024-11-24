@@ -1,3 +1,5 @@
+using GamifiedToDo.Services.App.Int.Chores;
+
 namespace GamifiedToDo.Services.App.Int;
 
 public class Chore
@@ -9,4 +11,6 @@ public class Chore
     public string ChoreText { get; set; }
     
     public ChoreStatus Status { get; set; }
+    
+    public ChoreDifficulty Difficulty { get; set; }
 }

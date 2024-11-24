@@ -37,7 +37,8 @@ public class ChoreRepository : IChoreRepository
             Id = Guid.NewGuid().ToString(),
             UserId = input.UserId,
             ChoreText = input.ChoreText,
-            Status = input.Status.ToString()
+            Status = input.Status.ToString(),
+            Difficulty = (int)input.Difficulty
         };
 
         _context.Add(chore);
@@ -57,11 +58,22 @@ public class ChoreRepository : IChoreRepository
     {
         var chore = await GetChoreByIdAndUserId(input.Id, input.UserId, cancellationToken);
         
-        chore.ChoreText = string.IsNullOrEmpty(input.ChoreText) ? chore.ChoreText : input.ChoreText;
-        chore.Status = (input.Status != null ? input.Status.ToString() : chore.Status)!;
+        chore.ChoreText = input.ChoreText ?? chore.ChoreText;
+        chore.Difficulty = input.Difficulty != null ? (int)input.Difficulty : chore.Difficulty;
 
         await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
+        return MapToChore(chore);
+    }
+
+    public async Task<Chore> UpdateStatusById(ChoreUpdateStatusInput input, CancellationToken cancellationToken = default)
+    {
+        var chore = await GetChoreByIdAndUserId(input.Id, input.UserId, cancellationToken);
+
+        chore.Status = input.Status.ToString();
+
+        await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        
         return MapToChore(chore);
     }
 
@@ -73,7 +85,8 @@ public class ChoreRepository : IChoreRepository
             Id = input.Id,
             UserId = input.UserId,
             Status = isParsed ? status : ChoreStatus.ToDo,
-            ChoreText = input.ChoreText
+            ChoreText = input.ChoreText,
+            Difficulty = (ChoreDifficulty)input.Difficulty
         };
     }
 

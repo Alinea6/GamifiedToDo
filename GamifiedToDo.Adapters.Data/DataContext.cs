@@ -7,6 +7,7 @@ public class DataContext : DbContext
 {
     public DbSet<Chore> Chores { get; set; }
     public DbSet<User> Users { get; set; }
+    public DbSet<UserLevel> UserLevels { get; set; }
     
     public DataContext(DbContextOptions<DataContext> options) : base(options)
     {
@@ -16,6 +17,7 @@ public class DataContext : DbContext
     {
         ConfigureTasks(modelBuilder);
         ConfigureUsers(modelBuilder);
+        ConfigureUserLevels(modelBuilder);
         
         base.OnModelCreating(modelBuilder);
     }
@@ -41,5 +43,17 @@ public class DataContext : DbContext
         modelBuilder.Entity<User>()
             .HasIndex(u => u.Login)
             .IsUnique();
+    }
+
+    private void ConfigureUserLevels(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<UserLevel>()
+            .HasIndex(u => u.Id)
+            .IsUnique();
+
+        modelBuilder.Entity<UserLevel>()
+            .HasOne(u => u.User)
+            .WithOne(ul => ul.UserLevel)
+            .HasForeignKey<User>(x => x.Id);
     }
 }
