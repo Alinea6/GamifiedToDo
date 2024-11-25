@@ -8,6 +8,7 @@ public class DataContext : DbContext
     public DbSet<Chore> Chores { get; set; }
     public DbSet<User> Users { get; set; }
     public DbSet<UserLevel> UserLevels { get; set; }
+    public DbSet<Board> Boards { get; set; }
     
     public DataContext(DbContextOptions<DataContext> options) : base(options)
     {
@@ -18,6 +19,7 @@ public class DataContext : DbContext
         ConfigureTasks(modelBuilder);
         ConfigureUsers(modelBuilder);
         ConfigureUserLevels(modelBuilder);
+        ConfigureBoards(modelBuilder);
         
         base.OnModelCreating(modelBuilder);
     }
@@ -55,5 +57,17 @@ public class DataContext : DbContext
             .HasOne(u => u.User)
             .WithOne(ul => ul.UserLevel)
             .HasForeignKey<User>(x => x.Id);
+    }
+
+    private void ConfigureBoards(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Board>()
+            .HasIndex(b => b.Id)
+            .IsUnique();
+        
+        modelBuilder.Entity<Board>()
+            .HasOne<User>()
+            .WithMany()
+            .HasForeignKey(x => x.UserId);
     }
 }
