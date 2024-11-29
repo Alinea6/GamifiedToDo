@@ -1,7 +1,6 @@
 using FluentAssertions;
 using GamifiedToDo.Adapters.Data;
 using GamifiedToDo.Adapters.Data.Repositories;
-using GamifiedToDo.Services.App.Int;
 using GamifiedToDo.Services.App.Int.Chores;
 using NUnit.Framework;
 

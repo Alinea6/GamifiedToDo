@@ -1,7 +1,6 @@
 using FluentAssertions;
 using GamifiedToDo.Services.App.Chores;
 using GamifiedToDo.Services.App.Dep.Chores;
-using GamifiedToDo.Services.App.Int;
 using GamifiedToDo.Services.App.Int.Chores;
 using GamifiedToDo.Services.App.Int.UserLevels;
 using GamifiedToDo.Tests.Unit.Helpers;

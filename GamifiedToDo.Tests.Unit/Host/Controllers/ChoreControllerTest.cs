@@ -2,7 +2,6 @@ using System.Security.Claims;
 using FluentAssertions;
 using GamifiedToDo.API.Controllers;
 using GamifiedToDo.API.Models.Chores;
-using GamifiedToDo.Services.App.Int;
 using GamifiedToDo.Services.App.Int.Chores;
 using GamifiedToDo.Tests.Unit.Helpers;
 using Microsoft.AspNetCore.Http;
@@ -14,7 +13,7 @@ namespace GamifiedToDo.Tests.Unit.Host.Controllers;
 
 public class ChoreControllerTest
 {
-    private string UserId = "fake-user-id";
+    private const string UserId = "fake-user-id";
     private ChoreController _sut;
     private Mock<IChoreService> _choreServiceMock;
 

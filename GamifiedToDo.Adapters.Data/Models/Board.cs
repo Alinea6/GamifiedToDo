@@ -11,12 +11,12 @@ public class Board
     
     [Required]
     public string UserId { get; set; }
-    
-    public IEnumerable<string> Collaborators { get; set; } = new List<string>();
-    
+
+    public string[] Collaborators { get; set; } = [];
+
     [Required]
     public string Name { get; set; }
 
-    public IEnumerable<string> ChoreIds { get; set; } = new List<string>();
+    public string[] ChoreIds { get; set; } = [];
 
 }

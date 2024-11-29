@@ -1,5 +1,4 @@
 using GamifiedToDo.Services.App.Dep.Chores;
-using GamifiedToDo.Services.App.Int;
 using GamifiedToDo.Services.App.Int.Chores;
 using GamifiedToDo.Services.App.Int.UserLevels;
 
