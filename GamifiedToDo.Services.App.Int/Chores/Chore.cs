@@ -1,6 +1,4 @@
-using GamifiedToDo.Services.App.Int.Chores;
-
-namespace GamifiedToDo.Services.App.Int;
+namespace GamifiedToDo.Services.App.Int.Chores;
 
 public class Chore
 {

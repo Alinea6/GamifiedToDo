@@ -69,5 +69,17 @@ public class DataContext : DbContext
             .HasOne<User>()
             .WithMany()
             .HasForeignKey(x => x.UserId);
+        
+        modelBuilder.Entity<Board>()
+            .Property(e => e.ChoreIds)
+            .HasConversion(
+                v => string.Join(',', v),
+                v => v.Split(',', StringSplitOptions.RemoveEmptyEntries));
+        
+        modelBuilder.Entity<Board>()
+            .Property(e => e.Collaborators)
+            .HasConversion(
+                v => string.Join(',', v),
+                v => v.Split(',', StringSplitOptions.RemoveEmptyEntries));
     }
 }

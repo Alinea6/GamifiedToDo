@@ -1,4 +1,4 @@
-namespace GamifiedToDo.Services.App.Int;
+namespace GamifiedToDo.Services.App.Int.Chores;
 
 public enum ChoreStatus
 {

@@ -16,10 +16,12 @@ public static class FakeDbContextProvider
         var chores = GenerateChores();
         var users = GenerateUsers();
         var userLevels = GenerateUserLevels();
+        var boards = GenerateBoards();
         
         context.Chores.AddRange(chores);
         context.Users.AddRange(users);
         context.UserLevels.AddRange(userLevels);
+        context.Boards.AddRange(boards);
         context.SaveChangesAsync();
         
         return context;
@@ -76,6 +78,13 @@ public static class FakeDbContextProvider
                 Login = "fake-login-2",
                 Password = "fake-password-2",
                 Email = "fake-email-2"
+            },
+            new User
+            {
+                Id = "fake-user-7",
+                Login = "fake-login-3",
+                Password = "fake-password-3",
+                Email = "fake-email-3"
             }
         ];
     }
@@ -93,6 +102,37 @@ public static class FakeDbContextProvider
             {
                 Id = "fake-user-6",
                 Exp = 2
+            }
+        ];
+    }
+
+    private static Board[] GenerateBoards()
+    {
+        return
+        [
+            new Board
+            {
+                Id = "fake-board-1",
+                UserId = "fake-user-5",
+                Collaborators = ["fake-user-7"],
+                ChoreIds = [ "fake-chore-id-1" ],
+                Name = "fake-board-name-1"
+            },
+            new Board
+            {
+                Id = "fake-board-2",
+                UserId = "fake-user-6",
+                Collaborators = [],
+                ChoreIds = [ "fake-chore-id-2" ],
+                Name = "fake-board-name-2"
+            },
+            new Board
+            {
+                Id = "fake-board-3",
+                UserId = "fake-user-7",
+                Collaborators = [],
+                ChoreIds = [],
+                Name = "fake-board-name-3"
             }
         ];
     }
