@@ -33,11 +33,10 @@ public class ChoreController : ControllerBase
     [HttpPost]
     public Task<Chore> Add(ChoreAddRequest request, CancellationToken cancellationToken = default)
     {
-        var userId = GetUserId();
         return _choreService.AddChore(new ChoreAddInput
         {
             ChoreText = request.ChoreText,
-            UserId = userId,
+            UserId = GetUserId(),
             Status = ChoreStatus.ToDo,
             Difficulty = request.Difficulty,
             Category = request.Category

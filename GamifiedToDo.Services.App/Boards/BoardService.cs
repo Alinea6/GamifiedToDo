@@ -16,4 +16,9 @@ public class BoardService : IBoardService
     {
         return _boardRepository.GetById(boardId, userId, cancellationToken);
     }
+
+    public Task<Board> Add(BoardAddInput input, CancellationToken cancellationToken = default)
+    {
+        return _boardRepository.Add(input, cancellationToken);
+    }
 }
