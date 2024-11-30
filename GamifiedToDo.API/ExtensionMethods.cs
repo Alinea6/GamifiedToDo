@@ -5,10 +5,13 @@ using GamifiedToDo.Adapters.Data;
 using GamifiedToDo.Adapters.Data.Models;
 using GamifiedToDo.Adapters.Data.Repositories;
 using GamifiedToDo.API.Validators;
+using GamifiedToDo.Services.App.Boards;
 using GamifiedToDo.Services.App.Chores;
+using GamifiedToDo.Services.App.Dep.Boards;
 using GamifiedToDo.Services.App.Dep.Chores;
 using GamifiedToDo.Services.App.Dep.UserLevels;
 using GamifiedToDo.Services.App.Dep.Users;
+using GamifiedToDo.Services.App.Int.Boards;
 using GamifiedToDo.Services.App.Int.Chores;
 using GamifiedToDo.Services.App.Int.UserLevels;
 using GamifiedToDo.Services.App.Int.Users;
@@ -40,6 +43,10 @@ public static class ExtensionMethods
             .AddScoped<IUserService, UserService>()
             .AddScoped<IUserRepository, UserRepository>()
             .AddScoped<IJsonWebTokenProvider, JsonWebTokenProvider>();
+
+        services
+            .AddScoped<IBoardService, BoardService>()
+            .AddScoped<IBoardRepository, BoardRepository>();
     }
 
     public static void RegisterExternalServices(this IServiceCollection services, IConfiguration configuration)

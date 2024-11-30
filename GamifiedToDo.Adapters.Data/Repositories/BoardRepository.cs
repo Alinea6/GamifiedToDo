@@ -20,11 +20,28 @@ public class BoardRepository : IBoardRepository
         return MapToBoard(board);
     }
 
+    public async Task<Board> Add(BoardAddInput input, CancellationToken cancellationToken = default)
+    {
+        var board = new Models.Board
+        {
+            Id = Guid.NewGuid().ToString(),
+            UserId = input.UserId,
+            Name = input.Name,
+            ChoreIds = input.ChoreIds.ToArray(),
+            Collaborators = input.Collaborators.ToArray()
+        };
+
+        _context.Add(board);
+        await _context.SaveChangesAsync(cancellationToken);
+        return MapToBoard(board);
+    }
+
     private async Task<Models.Board> GetByBoardIdAndUserId(string boardId, string userId,
         CancellationToken cancellationToken = default)
     {
+        //TODO: Fix Collaborators and tasks to be able to look for boards by collaborators id, probably need to add relations
         var board = await _context.Boards
-            .Where(b => b.Id == boardId && (b.UserId == userId || b.Collaborators.Contains(userId)))
+            .Where(b => b.Id == boardId && b.UserId == userId)
             .SingleOrDefaultAsync(cancellationToken).ConfigureAwait(false);
 
         if (board == null)

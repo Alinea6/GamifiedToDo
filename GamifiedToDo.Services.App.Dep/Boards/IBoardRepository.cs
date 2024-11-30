@@ -5,4 +5,5 @@ namespace GamifiedToDo.Services.App.Dep.Boards;
 public interface IBoardRepository
 {
     Task<Board> GetById(string boardId, string userId, CancellationToken cancellationToken = default);
+    Task<Board> Add(BoardAddInput input, CancellationToken cancellationToken = default);
 }

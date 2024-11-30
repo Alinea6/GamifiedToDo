@@ -41,4 +41,18 @@ public class BoardServiceTest
         // assert
         result.Should().Be(expected);
     }
+
+    [Test]
+    public async Task Add_should_call_board_repository_and_return_board()
+    {
+        var input = new BoardAddInput();
+        var expected = new Board();
+
+        _boardRepositoryMock.Setup(x => x.Add(input, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(expected);
+
+        var result = await _sut.Add(input);
+        
+        result.Should().Be(expected);
+    }
 }

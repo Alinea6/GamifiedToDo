@@ -1,5 +1,10 @@
 using System.Net.Http.Headers;
+using System.Text;
+using FluentAssertions;
+using GamifiedToDo.API.Models.Boards;
+using GamifiedToDo.Services.App.Int.Boards;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Newtonsoft.Json;
 using NUnit.Framework;
 
 namespace GamifiedToDo.Tests.Integration.Host.Controllers;
@@ -20,6 +25,41 @@ public class BoardControllerTest
     
         _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
     }
-    
-    //TODO: Add integration test for GetById after Add endpoint is added
+
+    [Test]
+    public async Task BoardController_should_add_delete_update_and_get_board()
+    {
+        var boardId = await AddShouldAddBoardToDbAndReturnIt();
+        await GetByIdShouldReturnBoard(boardId);
+    }
+
+    private async Task<string> AddShouldAddBoardToDbAndReturnIt()
+    {
+        var request = new BoardAddRequest
+        {
+            Name = "test-board-name",
+            Collaborators = new List<string>(),
+            ChoreIds = new List<string>()
+        };
+        
+        var json = JsonConvert.SerializeObject(request);
+        var data = new StringContent(json, Encoding.UTF8, "application/json");
+
+        var response = await _client.PostAsync("api/board", data);
+        var responseString = await response.Content.ReadAsStringAsync();
+        var result = JsonConvert.DeserializeObject<Board>(responseString);
+
+        result.Should().NotBeNull();
+
+        return result.Id;
+    }
+
+    private async Task GetByIdShouldReturnBoard(string boardId)
+    {
+        var response = await _client.GetAsync($"api/board/{boardId}");
+        var responseString = await response.Content.ReadAsStringAsync();
+        var result = JsonConvert.DeserializeObject<Board>(responseString);
+
+        result.Should().NotBeNull();
+    }
 }

@@ -60,4 +60,27 @@ public class BoardRepositoryTest
         await act.Should().ThrowAsync<Exception>()
             .WithMessage("Board with id fake-id-99 for user fake-user-99 was not found");
     }
+
+    [Test]
+    public async Task Add_should_add_board_and_return_it()
+    {
+        var originalBoardCount = _context.Boards.Count();
+        var input = new BoardAddInput
+        {
+            UserId = "fake-user-9",
+            Name = "fake-board-name",
+            Collaborators = new List<string> { "fake-user-10", "fake-user-11" },
+            ChoreIds = new List<string> { "fake-chore-1", "fake-chore-2" }
+        };
+        
+        // act
+        var result = await _sut.Add(input);
+        
+        // assert
+        result.UserId.Should().Be(input.UserId);
+        result.Name.Should().Be(input.Name);
+        result.ChoreIds.Should().BeEquivalentTo(input.ChoreIds);
+        result.Collaborators.Should().BeEquivalentTo(input.Collaborators);
+        _context.Boards.Count().Should().Be(originalBoardCount + 1);
+    }
 }
