@@ -66,7 +66,7 @@ public class DataContext : DbContext
             .IsUnique();
         
         modelBuilder.Entity<Board>()
-            .HasOne<User>()
+            .HasOne(b => b.Owner)
             .WithMany()
             .HasForeignKey(x => x.UserId);
 

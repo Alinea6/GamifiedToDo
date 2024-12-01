@@ -2,6 +2,7 @@ using FluentAssertions;
 using GamifiedToDo.Adapters.Data;
 using GamifiedToDo.Adapters.Data.Repositories;
 using GamifiedToDo.Services.App.Int.Boards;
+using GamifiedToDo.Services.App.Int.Users;
 using NUnit.Framework;
 using Board = GamifiedToDo.Services.App.Int.Boards.Board;
 
@@ -92,5 +93,48 @@ public class BoardRepositoryTest
 
         await act.Should().NotThrowAsync();
         _context.Boards.Count().Should().Be(originalBoardCount - 1);
+    }
+
+    [Test]
+    public async Task GetUserBoards_should_get_all_the_user_boards_map_them_and_return_them()
+    {
+        var expected = new List<BoardListItem>
+        {
+            new()
+            {
+                Id = "fake-board-1",
+                Owner = new User
+                {
+                    Id = "fake-user-5",
+                    Login = "fake-login-1"
+                },
+                Name = "fake-board-name-1",
+                Collaborators = new List<User>
+                {
+                    new()
+                    {
+                        Id = "fake-user-7",
+                        Login = "fake-login-3",
+                    }
+                },
+                IsOwner = false
+            },
+            new()
+            {
+                Id = "fake-board-3",
+                Owner = new User
+                {
+                    Id = "fake-user-7",
+                    Login = "fake-login-3",
+                },
+                Name = "fake-board-name-3",
+                Collaborators = new List<User>(),
+                IsOwner = true
+            }
+        };
+
+        var result = await _sut.GetUserBoards("fake-user-7");
+
+        result.Should().BeEquivalentTo(expected);
     }
 }

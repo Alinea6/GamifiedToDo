@@ -41,4 +41,10 @@ public class BoardController : ControllerBase
     {
         return _boardService.DeleteById(boardId, GetUserId(), cancellationToken);
     }
+
+    [HttpGet]
+    public Task<IEnumerable<BoardListItem>> GetUserBoards(CancellationToken cancellationToken = default)
+    {
+        return _boardService.GetUserBoards(GetUserId(), cancellationToken);
+    }
 }

@@ -71,4 +71,17 @@ public class BoardServiceTest
 
         await act.Should().NotThrowAsync();
     }
+
+    [Test]
+    public async Task GetUserBoards_should_call_board_repository()
+    {
+        var expected = new List<BoardListItem>();
+
+        _boardRepositoryMock.Setup(x => x.GetUserBoards("fake-user-id", It.IsAny<CancellationToken>()))
+            .ReturnsAsync(expected);
+
+        var result = await _sut.GetUserBoards("fake-user-id");
+        
+        result.Should().BeEquivalentTo(expected);
+    }
 }

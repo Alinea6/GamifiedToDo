@@ -19,4 +19,5 @@ public class Board
 
     public ICollection<Chore> Chores { get; set; } = [];
 
+    public User Owner { get; set; }
 }
