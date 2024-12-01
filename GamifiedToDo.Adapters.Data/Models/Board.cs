@@ -12,11 +12,11 @@ public class Board
     [Required]
     public string UserId { get; set; }
 
-    public string[] Collaborators { get; set; } = [];
+    public ICollection<User> Collaborators { get; set; } = [];
 
     [Required]
     public string Name { get; set; }
 
-    public string[] ChoreIds { get; set; } = [];
+    public ICollection<Chore> Chores { get; set; } = [];
 
 }

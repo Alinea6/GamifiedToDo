@@ -1,3 +1,6 @@
+using GamifiedToDo.Services.App.Int.Chores;
+using GamifiedToDo.Services.App.Int.Users;
+
 namespace GamifiedToDo.Services.App.Int.Boards;
 
 public class Board
@@ -6,9 +9,9 @@ public class Board
     
     public string UserId { get; set; }
     
-    public IEnumerable<string> Collaborators { get; set; }
+    public IEnumerable<User> Collaborators { get; set; }
     
     public string Name { get; set; }
     
-    public IEnumerable<string> ChoreIds { get; set; } = new List<string>();
+    public IEnumerable<Chore> Chores { get; set; }
 }

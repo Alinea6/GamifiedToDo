@@ -1,12 +1,11 @@
 using System.IdentityModel.Tokens.Jwt;
 using FluentAssertions;
 using GamifiedToDo.Adapters.Data;
-using GamifiedToDo.Adapters.Data.Models;
 using GamifiedToDo.Adapters.Data.Repositories;
 using GamifiedToDo.Services.App.Int.Users;
-using GamifiedToDo.Tests.Unit.Helpers;
 using Moq;
 using NUnit.Framework;
+using User = GamifiedToDo.Adapters.Data.Models.User;
 
 namespace GamifiedToDo.Tests.Unit.Adapters;
 
@@ -79,15 +78,6 @@ public class UserRepositoryTest
     [Test]
     public async Task Login_should_throw_error_when_login_or_password_is_incorrect()
     {
-        // arrange
-        var user = new User
-        {
-            Id = "fake-id-1",
-            Login = "fake-login-1",
-            Password = "fake-password-1"
-        };
-
-        
         // act
         var act = () => _sut.Login(new LoginInput
         {

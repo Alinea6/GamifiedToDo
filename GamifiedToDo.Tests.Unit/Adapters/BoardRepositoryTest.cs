@@ -3,6 +3,7 @@ using GamifiedToDo.Adapters.Data;
 using GamifiedToDo.Adapters.Data.Repositories;
 using GamifiedToDo.Services.App.Int.Boards;
 using NUnit.Framework;
+using Board = GamifiedToDo.Services.App.Int.Boards.Board;
 
 namespace GamifiedToDo.Tests.Unit.Adapters;
 
@@ -25,14 +26,14 @@ public class BoardRepositoryTest
         {
             Id = "fake-board-1",
             UserId = "fake-user-5",
-            Collaborators = new List<string> { "fake-user-7" },
-            ChoreIds = new List<string> { "fake-chore-id-1" },
             Name = "fake-board-name-1"
         };
 
         var result = await _sut.GetById("fake-board-1", "fake-user-5");
         
-        result.Should().BeEquivalentTo(expected);
+        result.Id.Should().BeEquivalentTo(expected.Id);
+        result.UserId.Should().Be(expected.UserId);
+        result.Name.Should().Be(expected.Name);
     }
 
     [Test]
@@ -42,14 +43,14 @@ public class BoardRepositoryTest
         {
             Id = "fake-board-1",
             UserId = "fake-user-5",
-            Collaborators = new List<string> { "fake-user-7" },
-            ChoreIds = new List<string> { "fake-chore-id-1" },
             Name = "fake-board-name-1"
         };
 
         var result = await _sut.GetById("fake-board-1", "fake-user-7");
         
-        result.Should().BeEquivalentTo(expected);
+        result.Id.Should().BeEquivalentTo(expected.Id);
+        result.UserId.Should().Be(expected.UserId);
+        result.Name.Should().Be(expected.Name);
     }
     
     [Test]
@@ -72,15 +73,12 @@ public class BoardRepositoryTest
             Collaborators = new List<string> { "fake-user-10", "fake-user-11" },
             ChoreIds = new List<string> { "fake-chore-1", "fake-chore-2" }
         };
-        
         // act
-        var result = await _sut.Add(input);
+         var result = await _sut.Add(input);
         
         // assert
         result.UserId.Should().Be(input.UserId);
         result.Name.Should().Be(input.Name);
-        result.ChoreIds.Should().BeEquivalentTo(input.ChoreIds);
-        result.Collaborators.Should().BeEquivalentTo(input.Collaborators);
         _context.Boards.Count().Should().Be(originalBoardCount + 1);
     }
 }

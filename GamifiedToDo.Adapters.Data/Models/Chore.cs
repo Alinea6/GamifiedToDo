@@ -19,4 +19,6 @@ public class Chore
     public int Difficulty { get; set; }
     
     public int Category { get; set; }
+
+    public ICollection<Board> Boards { get; set; } = [];
 }
