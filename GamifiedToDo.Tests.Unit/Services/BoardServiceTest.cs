@@ -55,4 +55,20 @@ public class BoardServiceTest
         
         result.Should().Be(expected);
     }
+
+    [Test]
+    public async Task Delete_should_call_board_repository()
+    {
+        var id = "fake-board-id";
+        
+        _boardRepositoryMock.Setup(x => x.DeleteById(
+                id, 
+                "fake-user-id", 
+                It.IsAny<CancellationToken>()))
+            .Returns(Task.CompletedTask);
+
+        var act = () => _sut.DeleteById(id, "fake-user-id");
+
+        await act.Should().NotThrowAsync();
+    }
 }

@@ -21,4 +21,9 @@ public class BoardService : IBoardService
     {
         return _boardRepository.Add(input, cancellationToken);
     }
+
+    public Task DeleteById(string boardId, string userId, CancellationToken cancellationToken = default)
+    {
+        return _boardRepository.DeleteById(boardId, userId, cancellationToken);
+    }
 }

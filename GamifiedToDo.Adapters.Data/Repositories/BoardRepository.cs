@@ -48,6 +48,14 @@ public class BoardRepository : IBoardRepository
         return MapToBoard(board);
     }
 
+    public async Task DeleteById(string boardId, string userId, CancellationToken cancellationToken = default)
+    {
+        var board = await GetByBoardIdAndUserId(boardId, userId, cancellationToken);
+        
+        _context.Remove(board);
+        await _context.SaveChangesAsync(cancellationToken);
+    }
+
     private async Task<Models.Board> GetByBoardIdAndUserId(string boardId, string userId,
         CancellationToken cancellationToken = default)
     {
