@@ -35,4 +35,10 @@ public class BoardController : ControllerBase
                 Collaborators = request.Collaborators
             }, cancellationToken);
     }
+
+    [HttpDelete("{boardId}")]
+    public Task DeleteById(string boardId, CancellationToken cancellationToken = default)
+    {
+        return _boardService.DeleteById(boardId, GetUserId(), cancellationToken);
+    }
 }

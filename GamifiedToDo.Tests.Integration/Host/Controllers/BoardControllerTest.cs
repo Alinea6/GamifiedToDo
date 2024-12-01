@@ -9,7 +9,7 @@ using NUnit.Framework;
 
 namespace GamifiedToDo.Tests.Integration.Host.Controllers;
 
-public class BoardControllerTest
+public partial class BoardControllerTest
 {
     private WebApplicationFactory<Program> _clientApiFactory;
     private HttpClient _client;
@@ -31,6 +31,7 @@ public class BoardControllerTest
     {
         var boardId = await AddShouldAddBoardToDbAndReturnIt();
         await GetByIdShouldReturnBoard(boardId);
+        await DeleteByIdShouldRemoveBoard(boardId);
     }
 
     private async Task<string> AddShouldAddBoardToDbAndReturnIt()
@@ -61,5 +62,12 @@ public class BoardControllerTest
         var result = JsonConvert.DeserializeObject<Board>(responseString);
 
         result.Should().NotBeNull();
+    }
+
+    private async Task DeleteByIdShouldRemoveBoard(string boardId)
+    {
+        var act = () => _client.DeleteAsync($"api/board/{boardId}");
+
+        await act.Should().NotThrowAsync();
     }
 }

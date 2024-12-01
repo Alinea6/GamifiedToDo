@@ -90,4 +90,17 @@ public class BoardControllerTest
         // assert
         result.Should().Be(expected);
     }
+
+    [Test]
+    public async Task DeleteById_should_call_board_service()
+    {
+        var id = "fake-board-id";
+
+        _boardServiceMock.Setup(x => x.DeleteById(id, UserId, It.IsAny<CancellationToken>()))
+            .Returns(Task.CompletedTask);
+
+        var act = () => _sut.DeleteById(id);
+
+        await act.Should().NotThrowAsync();
+    }
 }

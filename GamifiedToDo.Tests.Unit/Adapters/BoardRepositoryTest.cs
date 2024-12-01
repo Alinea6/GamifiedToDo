@@ -81,4 +81,16 @@ public class BoardRepositoryTest
         result.Name.Should().Be(input.Name);
         _context.Boards.Count().Should().Be(originalBoardCount + 1);
     }
+
+    [Test]
+    public async Task DeleteById_should_remove_board()
+    {
+        var originalBoardCount = _context.Boards.Count();
+        
+        // act
+        var act = () => _sut.DeleteById("fake-board-3", "fake-user-7");
+
+        await act.Should().NotThrowAsync();
+        _context.Boards.Count().Should().Be(originalBoardCount - 1);
+    }
 }

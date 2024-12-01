@@ -71,7 +71,7 @@ public class ChoreController : ControllerBase
         ChoreUpdateStatusRequest request,
         CancellationToken cancellationToken = default)
     {
-        return _choreService.UpdateStatusById(new ChoreUpdateStatusInput()
+        return _choreService.UpdateStatusById(new ChoreUpdateStatusInput
         {
             Id = choreId,
             UserId = GetUserId(),
