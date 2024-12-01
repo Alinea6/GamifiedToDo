@@ -103,4 +103,17 @@ public class BoardControllerTest
 
         await act.Should().NotThrowAsync();
     }
+
+    [Test]
+    public async Task GetUserBoards_should_call_board_service_and_return_list_of_boards()
+    {
+        var expected = new List<BoardListItem>();
+
+        _boardServiceMock.Setup(x => x.GetUserBoards(UserId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(expected);
+
+        var result = await _sut.GetUserBoards();
+        
+        result.Should().BeEquivalentTo(expected);
+    }
 }

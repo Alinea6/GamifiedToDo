@@ -11,8 +11,7 @@ public class BoardRepository : IBoardRepository
 {
     private readonly DataContext _context;
 
-    public BoardRepository(
-        DataContext context)
+    public BoardRepository(DataContext context)
     {
         _context = context;
     }
@@ -54,6 +53,17 @@ public class BoardRepository : IBoardRepository
         
         _context.Remove(board);
         await _context.SaveChangesAsync(cancellationToken);
+    }
+
+    public async Task<IEnumerable<BoardListItem>> GetUserBoards(string userId, CancellationToken cancellationToken = default)
+    {
+        var boards = await _context.Boards
+            .Include(x => x.Collaborators)
+            .Include(x => x.Owner)
+            .Where(b => b.UserId == userId || b.Collaborators.Any(x => x.Id == userId))
+            .ToListAsync(cancellationToken);
+
+        return boards.Select(x => MapToBoardListItem(x, userId, MapToUser(x.Owner)));
     }
 
     private async Task<Models.Board> GetByBoardIdAndUserId(string boardId, string userId,
@@ -105,6 +115,18 @@ public class BoardRepository : IBoardRepository
             ChoreText = chore.ChoreText,
             Difficulty = (ChoreDifficulty)chore.Difficulty,
             Category = (ChoreCategory)chore.Category
+        };
+    }
+
+    private static BoardListItem MapToBoardListItem(Models.Board board, string userId, User owner)
+    {
+        return new BoardListItem
+        {
+            Id = board.Id,
+            Owner = owner,
+            Collaborators = board.Collaborators.Select(MapToUser),
+            Name = board.Name,
+            IsOwner = owner.Id == userId
         };
     }
 }

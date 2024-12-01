@@ -26,4 +26,9 @@ public class BoardService : IBoardService
     {
         return _boardRepository.DeleteById(boardId, userId, cancellationToken);
     }
+
+    public Task<IEnumerable<BoardListItem>> GetUserBoards(string userId, CancellationToken cancellationToken = default)
+    {
+        return _boardRepository.GetUserBoards(userId, cancellationToken);
+    }
 }

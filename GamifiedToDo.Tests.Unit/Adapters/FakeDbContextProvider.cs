@@ -116,7 +116,8 @@ public static class FakeDbContextProvider
                 UserId = "fake-user-5",
                 Collaborators = new List<User> {users[2]},
                 Chores = new List<Chore>{chores[0]},
-                Name = "fake-board-name-1"
+                Name = "fake-board-name-1",
+                Owner = users[0]
             },
             new Board
             {
@@ -124,7 +125,8 @@ public static class FakeDbContextProvider
                 UserId = "fake-user-6",
                 Collaborators = [],
                 Chores = new List<Chore>{chores[1]},
-                Name = "fake-board-name-2"
+                Name = "fake-board-name-2",
+                Owner = users[1]
             },
             new Board
             {
@@ -132,7 +134,8 @@ public static class FakeDbContextProvider
                 UserId = "fake-user-7",
                 Collaborators = [],
                 Chores = [],
-                Name = "fake-board-name-3"
+                Name = "fake-board-name-3",
+                Owner = users[2]
             }
         ];
     }

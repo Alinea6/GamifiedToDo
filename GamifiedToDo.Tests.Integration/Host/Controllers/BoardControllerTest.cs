@@ -30,6 +30,7 @@ public partial class BoardControllerTest
     public async Task BoardController_should_add_delete_update_and_get_board()
     {
         var boardId = await AddShouldAddBoardToDbAndReturnIt();
+        await GetUserBoardsShouldReturnBoardList();
         await GetByIdShouldReturnBoard(boardId);
         await DeleteByIdShouldRemoveBoard(boardId);
     }
@@ -69,5 +70,14 @@ public partial class BoardControllerTest
         var act = () => _client.DeleteAsync($"api/board/{boardId}");
 
         await act.Should().NotThrowAsync();
+    }
+
+    private async Task GetUserBoardsShouldReturnBoardList()
+    {
+        var response = await _client.GetAsync("api/board");
+        var responseString = await response.Content.ReadAsStringAsync();
+        var result = JsonConvert.DeserializeObject<List<BoardListItem>>(responseString);
+
+        result.Should().NotBeNull();
     }
 }

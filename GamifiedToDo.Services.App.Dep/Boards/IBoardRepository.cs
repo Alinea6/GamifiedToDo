@@ -7,4 +7,5 @@ public interface IBoardRepository
     Task<Board> GetById(string boardId, string userId, CancellationToken cancellationToken = default);
     Task<Board> Add(BoardAddInput input, CancellationToken cancellationToken = default);
     Task DeleteById(string boardId, string userId, CancellationToken cancellationToken = default);
+    Task<IEnumerable<BoardListItem>> GetUserBoards(string userId, CancellationToken cancellationToken = default);
 }
