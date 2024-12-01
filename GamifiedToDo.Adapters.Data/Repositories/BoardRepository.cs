@@ -1,6 +1,9 @@
 using GamifiedToDo.Services.App.Dep.Boards;
 using GamifiedToDo.Services.App.Int.Boards;
+using GamifiedToDo.Services.App.Int.Chores;
 using Microsoft.EntityFrameworkCore;
+using Board = GamifiedToDo.Services.App.Int.Boards.Board;
+using User = GamifiedToDo.Services.App.Int.Users.User;
 
 namespace GamifiedToDo.Adapters.Data.Repositories;
 
@@ -8,7 +11,8 @@ public class BoardRepository : IBoardRepository
 {
     private readonly DataContext _context;
 
-    public BoardRepository(DataContext context)
+    public BoardRepository(
+        DataContext context)
     {
         _context = context;
     }
@@ -22,13 +26,21 @@ public class BoardRepository : IBoardRepository
 
     public async Task<Board> Add(BoardAddInput input, CancellationToken cancellationToken = default)
     {
+        var chores = await _context.Chores
+            .Where(x => input.ChoreIds.Contains(x.Id) && x.UserId == input.UserId)
+            .ToListAsync(cancellationToken);
+
+        var users = await _context.Users
+            .Where(x => input.Collaborators.Contains(x.Id))
+            .ToListAsync(cancellationToken);
+        
         var board = new Models.Board
         {
             Id = Guid.NewGuid().ToString(),
             UserId = input.UserId,
             Name = input.Name,
-            ChoreIds = input.ChoreIds.ToArray(),
-            Collaborators = input.Collaborators.ToArray()
+            Chores = chores,
+            Collaborators = users.ToList()
         };
 
         _context.Add(board);
@@ -39,9 +51,10 @@ public class BoardRepository : IBoardRepository
     private async Task<Models.Board> GetByBoardIdAndUserId(string boardId, string userId,
         CancellationToken cancellationToken = default)
     {
-        //TODO: Fix Collaborators and tasks to be able to look for boards by collaborators id, probably need to add relations
         var board = await _context.Boards
-            .Where(b => b.Id == boardId && b.UserId == userId)
+            .Include(x => x.Chores)
+            .Include(x => x.Collaborators)
+            .Where(b => (b.Id == boardId && b.UserId == userId) || (b.Id == boardId && b.Collaborators.Any(x => x.Id == userId)))
             .SingleOrDefaultAsync(cancellationToken).ConfigureAwait(false);
 
         if (board == null)
@@ -58,9 +71,32 @@ public class BoardRepository : IBoardRepository
         {
             Id = board.Id,
             UserId = board.UserId,
-            Collaborators = board.Collaborators,
+            Collaborators = board.Collaborators.Select(MapToUser),
             Name = board.Name,
-            ChoreIds = board.ChoreIds
+            Chores = board.Chores.Select(MapToChore)
+        };
+    }
+
+    private static User MapToUser(Models.User user)
+    {
+        return new User
+        {
+            Id = user.Id,
+            Login = user.Login
+        };
+    }
+
+    private static Chore MapToChore(Models.Chore chore)
+    {
+        var isParsed = Enum.TryParse(chore.Status, out ChoreStatus status);
+        return new Chore
+        {
+            Id = chore.Id,
+            UserId = chore.UserId,
+            Status = isParsed ? status : ChoreStatus.ToDo,
+            ChoreText = chore.ChoreText,
+            Difficulty = (ChoreDifficulty)chore.Difficulty,
+            Category = (ChoreCategory)chore.Category
         };
     }
 }

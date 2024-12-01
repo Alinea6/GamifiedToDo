@@ -16,7 +16,7 @@ public static class FakeDbContextProvider
         var chores = GenerateChores();
         var users = GenerateUsers();
         var userLevels = GenerateUserLevels();
-        var boards = GenerateBoards();
+        var boards = GenerateBoards(chores, users);
         
         context.Chores.AddRange(chores);
         context.Users.AddRange(users);
@@ -106,7 +106,7 @@ public static class FakeDbContextProvider
         ];
     }
 
-    private static Board[] GenerateBoards()
+    private static Board[] GenerateBoards(Chore[] chores, User[] users)
     {
         return
         [
@@ -114,8 +114,8 @@ public static class FakeDbContextProvider
             {
                 Id = "fake-board-1",
                 UserId = "fake-user-5",
-                Collaborators = ["fake-user-7"],
-                ChoreIds = [ "fake-chore-id-1" ],
+                Collaborators = new List<User> {users[2]},
+                Chores = new List<Chore>{chores[0]},
                 Name = "fake-board-name-1"
             },
             new Board
@@ -123,7 +123,7 @@ public static class FakeDbContextProvider
                 Id = "fake-board-2",
                 UserId = "fake-user-6",
                 Collaborators = [],
-                ChoreIds = [ "fake-chore-id-2" ],
+                Chores = new List<Chore>{chores[1]},
                 Name = "fake-board-name-2"
             },
             new Board
@@ -131,7 +131,7 @@ public static class FakeDbContextProvider
                 Id = "fake-board-3",
                 UserId = "fake-user-7",
                 Collaborators = [],
-                ChoreIds = [],
+                Chores = [],
                 Name = "fake-board-name-3"
             }
         ];
