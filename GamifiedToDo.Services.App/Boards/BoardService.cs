@@ -36,4 +36,9 @@ public class BoardService : IBoardService
     {
         return _boardRepository.AddChores(input, cancellationToken);
     }
+
+    public Task<Board> RemoveChores(BoardChoresInput input, CancellationToken cancellationToken = default)
+    {
+        return _boardRepository.RemoveChores(input, cancellationToken);
+    }
 }

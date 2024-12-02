@@ -139,4 +139,27 @@ public class BoardControllerTest
         
         result.Should().Be(expected);
     }
+    
+    [Test]
+    public async Task RemoveChores_should_call_board_service_and_return_board()
+    {
+        var expected = new Board();
+        var request = new BoardChoresRequest()
+        {
+            ChoreIds = new List<string> { "fake-chore-1", "fake-chore-2" }
+        };
+        var input = new BoardChoresInput
+        {
+            Id = "fake-board-id",
+            UserId = UserId,
+            ChoreIds = request.ChoreIds
+        };
+
+        _boardServiceMock.Setup(x => x.RemoveChores(MoqHandler.IsEquivalentTo(input), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(expected);
+
+        var result = await _sut.RemoveChores("fake-board-id", request);
+        
+        result.Should().Be(expected);
+    }
 }

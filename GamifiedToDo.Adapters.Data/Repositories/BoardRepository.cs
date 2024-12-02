@@ -89,6 +89,22 @@ public class BoardRepository : IBoardRepository
         return MapToBoard(board, input.UserId);
     }
 
+    public async Task<Board> RemoveChores(BoardChoresInput input, CancellationToken cancellationToken = default)
+    {
+        var board = await GetByBoardIdAndUserId(input.Id, input.UserId, cancellationToken).ConfigureAwait(false);
+
+        var choresToRemove = board.Chores.Where(x => input.ChoreIds.Contains(x.Id)).ToList();
+
+        foreach (var chore in choresToRemove)
+        {
+            board.Chores.Remove(chore);
+        }
+
+        await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+
+        return MapToBoard(board, input.UserId);
+    }
+
     private async Task<Models.Board> GetByBoardIdAndUserId(string boardId, string userId,
         CancellationToken cancellationToken = default)
     {

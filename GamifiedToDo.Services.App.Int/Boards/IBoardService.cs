@@ -7,4 +7,5 @@ public interface IBoardService
     Task DeleteById(string boardId, string userId, CancellationToken cancellationToken = default);
     Task<IEnumerable<BoardListItem>> GetUserBoards(string userId, CancellationToken cancellationToken = default);
     Task<Board> AddChores(BoardChoresInput input, CancellationToken cancellationToken = default);
+    Task<Board> RemoveChores(BoardChoresInput input, CancellationToken cancellationToken = default);
 }

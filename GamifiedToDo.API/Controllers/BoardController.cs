@@ -59,5 +59,16 @@ public class BoardController : ControllerBase
             ChoreIds = request.ChoreIds
         }, cancellationToken);
     }
-    
+
+    [HttpPost("{boardId}/chores/remove")]
+    public Task<Board> RemoveChores(string boardId, BoardChoresRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        return _boardService.RemoveChores(new BoardChoresInput
+        {
+            Id = boardId,
+            UserId = GetUserId(),
+            ChoreIds = request.ChoreIds
+        }, cancellationToken);
+    }
 }

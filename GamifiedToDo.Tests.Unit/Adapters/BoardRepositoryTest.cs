@@ -181,4 +181,40 @@ public class BoardRepositoryTest
         result.Chores.Count().Should().Be(2);
         result.Id.Should().Be("fake-board-3");
     }
+
+    [Test]
+    public async Task RemoveChores_should_remove_chores_from_board_by_owner()
+    {
+        var input = new BoardChoresInput
+        {
+            Id = "fake-board-2",
+            UserId = "fake-user-6",
+            ChoreIds = new List<string>
+            {
+                "fake-chore-id-2"
+            }
+        };
+        
+        var result = await _sut.RemoveChores(input);
+
+        result.Chores.Count().Should().Be(0);
+    }
+    
+    [Test]
+    public async Task RemoveChores_should_remove_chores_from_board_by_collaborator()
+    {
+        var input = new BoardChoresInput
+        {
+            Id = "fake-board-1",
+            UserId = "fake-user-7",
+            ChoreIds = new List<string>
+            {
+                "fake-chore-id-1"
+            }
+        };
+        
+        var result = await _sut.RemoveChores(input);
+
+        result.Chores.Count().Should().Be(0);
+    }
 }
