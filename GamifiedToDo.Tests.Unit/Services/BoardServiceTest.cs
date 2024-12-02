@@ -98,4 +98,18 @@ public class BoardServiceTest
 
         result.Should().Be(expected);
     }
+    
+    [Test]
+    public async Task RemoveChores_should_call_board_repository()
+    {
+        var input = new BoardChoresInput();
+        var expected = new Board();
+
+        _boardRepositoryMock.Setup(x => x.RemoveChores(input, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(expected);
+
+        var result = await _sut.RemoveChores(input);
+
+        result.Should().Be(expected);
+    }
 }

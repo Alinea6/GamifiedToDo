@@ -33,6 +33,7 @@ public partial class BoardControllerTest
         await GetUserBoardsShouldReturnBoardList();
         await GetByIdShouldReturnBoard(boardId);
         await AddChoresShouldAddChoreToBoard(boardId);
+        await RemoveChoresShouldRemoveChoreFromBoard(boardId);
         await DeleteByIdShouldRemoveBoard(boardId);
     }
 
@@ -97,5 +98,22 @@ public partial class BoardControllerTest
         var result = JsonConvert.DeserializeObject<Board>(responseString);
 
         result.Chores.Should().NotBeEmpty();
+    }
+
+    private async Task RemoveChoresShouldRemoveChoreFromBoard(string boardId)
+    {
+        var request = new BoardChoresRequest()
+        {
+            ChoreIds = new List<string>{ "fake-id" }
+        };
+        
+        var json = JsonConvert.SerializeObject(request);
+        var data = new StringContent(json, Encoding.UTF8, "application/json");
+
+        var response = await _client.PostAsync($"api/board/{boardId}/chores/remove", data);
+        var responseString = await response.Content.ReadAsStringAsync();
+        var result = JsonConvert.DeserializeObject<Board>(responseString);
+
+        result.Chores.Should().BeEmpty();
     }
 }
