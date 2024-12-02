@@ -32,6 +32,10 @@ public class BoardRepository : IBoardRepository
         var users = await _context.Users
             .Where(x => input.Collaborators.Contains(x.Id))
             .ToListAsync(cancellationToken);
+
+        var owner = await _context.Users
+            .Where(x => x.Id == input.UserId)
+            .SingleAsync(cancellationToken);
         
         var board = new Models.Board
         {
@@ -39,7 +43,8 @@ public class BoardRepository : IBoardRepository
             UserId = input.UserId,
             Name = input.Name,
             Chores = chores,
-            Collaborators = users.ToList()
+            Collaborators = users.ToList(),
+            Owner = owner
         };
 
         _context.Add(board);
