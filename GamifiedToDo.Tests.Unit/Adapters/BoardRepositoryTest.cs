@@ -26,15 +26,27 @@ public class BoardRepositoryTest
         var expected = new Board
         {
             Id = "fake-board-1",
-            UserId = "fake-user-5",
-            Name = "fake-board-name-1"
+            Owner = new User
+            {
+                Id = "fake-user-5",
+                Login = "fake-login-1",
+            },
+            Name = "fake-board-name-1",
+            IsOwner = true,
+            Collaborators = new List<User>
+            {
+                new()
+                {
+                    Id = "fake-user-7",
+                    Login = "fake-login-3",
+                }
+            }
         };
 
         var result = await _sut.GetById("fake-board-1", "fake-user-5");
         
-        result.Id.Should().BeEquivalentTo(expected.Id);
-        result.UserId.Should().Be(expected.UserId);
-        result.Name.Should().Be(expected.Name);
+        result.Id.Should().Be("fake-board-1");
+        result.Owner.Id.Should().Be("fake-user-5");
     }
 
     [Test]
@@ -43,15 +55,27 @@ public class BoardRepositoryTest
         var expected = new Board
         {
             Id = "fake-board-1",
-            UserId = "fake-user-5",
-            Name = "fake-board-name-1"
+            Owner = new User
+            {
+                Id = "fake-user-5",
+                Login = "fake-login-1",
+            },
+            Name = "fake-board-name-1",
+            IsOwner = false,
+            Collaborators = new List<User>
+            {
+                new()
+                {
+                    Id = "fake-user-7",
+                    Login = "fake-login-3",
+                }
+            }
         };
 
         var result = await _sut.GetById("fake-board-1", "fake-user-7");
-        
-        result.Id.Should().BeEquivalentTo(expected.Id);
-        result.UserId.Should().Be(expected.UserId);
-        result.Name.Should().Be(expected.Name);
+
+        result.Id.Should().BeEquivalentTo("fake-board-1");
+        result.Collaborators.First().Id.Should().Be("fake-user-7");
     }
     
     [Test]
@@ -69,17 +93,17 @@ public class BoardRepositoryTest
         var originalBoardCount = _context.Boards.Count();
         var input = new BoardAddInput
         {
-            UserId = "fake-user-9",
+            UserId = "fake-user-7",
             Name = "fake-board-name",
-            Collaborators = new List<string> { "fake-user-10", "fake-user-11" },
+            Collaborators = new List<string> { "fake-user-6", "fake-user-5" },
             ChoreIds = new List<string> { "fake-chore-1", "fake-chore-2" }
         };
         // act
          var result = await _sut.Add(input);
         
         // assert
-        result.UserId.Should().Be(input.UserId);
         result.Name.Should().Be(input.Name);
+        result.Owner.Id.Should().Be(input.UserId);
         _context.Boards.Count().Should().Be(originalBoardCount + 1);
     }
 

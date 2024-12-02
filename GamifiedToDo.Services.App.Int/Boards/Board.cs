@@ -7,11 +7,13 @@ public class Board
 {
     public string Id { get; set; }
     
-    public string UserId { get; set; }
+    public User Owner { get; set; }
     
     public IEnumerable<User> Collaborators { get; set; }
     
     public string Name { get; set; }
     
     public IEnumerable<Chore> Chores { get; set; }
+    
+    public bool IsOwner { get; set; }
 }
