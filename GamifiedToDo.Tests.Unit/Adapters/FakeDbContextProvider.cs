@@ -57,7 +57,25 @@ public static class FakeDbContextProvider
                 ChoreText = "fake-chore-text-3",
                 Difficulty = 3,
                 Category = 3
-            }
+            },
+            new Chore
+            {
+                Id = "fake-chore-id-4",
+                Status = "ToDo",
+                UserId = "fake-user-7",
+                ChoreText = "fake-chore-text-3",
+                Difficulty = 3,
+                Category = 3
+            },
+            new Chore
+            {
+                Id = "fake-chore-id-5",
+                Status = "ToDo",
+                UserId = "fake-user-7",
+                ChoreText = "fake-chore-text-3",
+                Difficulty = 3,
+                Category = 3
+            },
         ];
     }
     

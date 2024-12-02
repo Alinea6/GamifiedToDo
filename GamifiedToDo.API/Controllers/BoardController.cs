@@ -47,4 +47,17 @@ public class BoardController : ControllerBase
     {
         return _boardService.GetUserBoards(GetUserId(), cancellationToken);
     }
+
+    [HttpPost("{boardId}/chores/add")]
+    public Task<Board> AddChores(string boardId, BoardChoresRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        return _boardService.AddChores(new BoardChoresInput
+        {
+            Id = boardId,
+            UserId = GetUserId(),
+            ChoreIds = request.ChoreIds
+        }, cancellationToken);
+    }
+    
 }

@@ -161,4 +161,24 @@ public class BoardRepositoryTest
 
         result.Should().BeEquivalentTo(expected);
     }
+
+    [Test]
+    public async Task AddChores_should_add_chores_to_board()
+    {
+        var input = new BoardChoresInput
+        {
+            Id = "fake-board-3",
+            UserId = "fake-user-7",
+            ChoreIds = new List<string>
+            {
+                "fake-chore-id-4",
+                "fake-chore-id-5"
+            }
+        };
+
+        var result = await _sut.AddChores(input);
+
+        result.Chores.Count().Should().Be(2);
+        result.Id.Should().Be("fake-board-3");
+    }
 }
