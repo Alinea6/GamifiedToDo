@@ -71,6 +71,24 @@ public class BoardRepository : IBoardRepository
         return boards.Select(x => MapToBoardListItem(x, userId, MapToUser(x.Owner)));
     }
 
+    public async Task<Board> AddChores(BoardChoresInput input, CancellationToken cancellationToken = default)
+    {
+        var board = await GetByBoardIdAndUserId(input.Id, input.UserId, cancellationToken).ConfigureAwait(false);
+
+        var chores = await _context.Chores
+            .Where(x => input.ChoreIds.Contains(x.Id) && x.UserId == input.UserId)
+            .ToListAsync(cancellationToken);
+
+        foreach (var chore in chores)
+        {
+            board.Chores.Add(chore);
+        }
+        
+        await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+
+        return MapToBoard(board, input.UserId);
+    }
+
     private async Task<Models.Board> GetByBoardIdAndUserId(string boardId, string userId,
         CancellationToken cancellationToken = default)
     {

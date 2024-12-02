@@ -31,4 +31,9 @@ public class BoardService : IBoardService
     {
         return _boardRepository.GetUserBoards(userId, cancellationToken);
     }
+
+    public Task<Board> AddChores(BoardChoresInput input, CancellationToken cancellationToken = default)
+    {
+        return _boardRepository.AddChores(input, cancellationToken);
+    }
 }

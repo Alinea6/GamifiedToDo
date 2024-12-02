@@ -84,4 +84,18 @@ public class BoardServiceTest
         
         result.Should().BeEquivalentTo(expected);
     }
+
+    [Test]
+    public async Task AddChores_should_call_board_repository()
+    {
+        var input = new BoardChoresInput();
+        var expected = new Board();
+
+        _boardRepositoryMock.Setup(x => x.AddChores(input, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(expected);
+
+        var result = await _sut.AddChores(input);
+
+        result.Should().Be(expected);
+    }
 }
