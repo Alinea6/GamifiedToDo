@@ -20,7 +20,7 @@ public class BoardRepository : IBoardRepository
     {
         var board = await GetByBoardIdAndUserId(boardId, userId, cancellationToken).ConfigureAwait(false);
 
-        return MapToBoard(board);
+        return MapToBoard(board, userId);
     }
 
     public async Task<Board> Add(BoardAddInput input, CancellationToken cancellationToken = default)
@@ -44,7 +44,7 @@ public class BoardRepository : IBoardRepository
 
         _context.Add(board);
         await _context.SaveChangesAsync(cancellationToken);
-        return MapToBoard(board);
+        return MapToBoard(board, input.UserId);
     }
 
     public async Task DeleteById(string boardId, string userId, CancellationToken cancellationToken = default)
@@ -72,6 +72,7 @@ public class BoardRepository : IBoardRepository
         var board = await _context.Boards
             .Include(x => x.Chores)
             .Include(x => x.Collaborators)
+            .Include(x => x.Owner)
             .Where(b => (b.Id == boardId && b.UserId == userId) || (b.Id == boardId && b.Collaborators.Any(x => x.Id == userId)))
             .SingleOrDefaultAsync(cancellationToken).ConfigureAwait(false);
 
@@ -83,15 +84,16 @@ public class BoardRepository : IBoardRepository
         return board;
     }
 
-    private static Board MapToBoard(Models.Board board)
+    private static Board MapToBoard(Models.Board board, string userId)
     {
         return new Board
         {
             Id = board.Id,
-            UserId = board.UserId,
+            Owner = MapToUser(board.Owner),
             Collaborators = board.Collaborators.Select(MapToUser),
             Name = board.Name,
-            Chores = board.Chores.Select(MapToChore)
+            Chores = board.Chores.Select(MapToChore),
+            IsOwner = board.Owner.Id == userId
         };
     }
 
