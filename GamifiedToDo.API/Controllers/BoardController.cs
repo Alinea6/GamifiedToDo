@@ -83,4 +83,16 @@ public class BoardController : ControllerBase
             CollaboratorIds = request.CollaboratorIds
         }, cancellationToken);
     }
+    
+    [HttpPost("{boardId}/collaborators/remove")]
+    public Task<Board> RemoveCollaborators(string boardId, BoardCollaboratorsRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        return _boardService.RemoveCollaborators(new BoardCollaboratorsInput
+        {
+            Id = boardId,
+            UserId = GetUserId(),
+            CollaboratorIds = request.CollaboratorIds
+        }, cancellationToken);
+    }
 }

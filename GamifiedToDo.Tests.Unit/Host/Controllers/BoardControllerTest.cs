@@ -186,4 +186,28 @@ public class BoardControllerTest
         
         result.Should().Be(expected);
     }
+    
+    [Test]
+    public async Task RemoveCollaborators_should_call_board_service_and_return_board()
+    {
+        var expected = new Board();
+        var request = new BoardCollaboratorsRequest
+        {
+            CollaboratorIds = new List<string> { "fake-collaborator-1", "fake-collaborator-2" }
+        };
+        var input = new BoardCollaboratorsInput
+        {
+            Id = "fake-board-id",
+            UserId = UserId,
+            CollaboratorIds = request.CollaboratorIds
+        };
+
+        _boardServiceMock
+            .Setup(x => x.RemoveCollaborators(MoqHandler.IsEquivalentTo(input), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(expected);
+
+        var result = await _sut.RemoveCollaborators("fake-board-id", request);
+        
+        result.Should().Be(expected);
+    }
 }

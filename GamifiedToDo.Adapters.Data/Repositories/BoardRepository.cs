@@ -123,6 +123,23 @@ public class BoardRepository : IBoardRepository
         return MapToBoard(board, input.UserId);
     }
 
+    public async Task<Board> RemoveCollaborators(BoardCollaboratorsInput input, CancellationToken cancellationToken = default)
+    {
+        var board = await GetByBoardIdAndUserId(input.Id, input.UserId, cancellationToken).ConfigureAwait(false);
+
+        var collaboratorsToRemove = board.Collaborators.Where(x => input.CollaboratorIds.Contains(x.Id))
+            .ToList();
+
+        foreach (var collaborator in collaboratorsToRemove)
+        {
+            board.Collaborators.Remove(collaborator);
+        }
+
+        await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+
+        return MapToBoard(board, input.UserId);
+    }
+
     private async Task<Models.Board> GetByBoardIdAndUserId(string boardId, string userId,
         CancellationToken cancellationToken = default)
     {

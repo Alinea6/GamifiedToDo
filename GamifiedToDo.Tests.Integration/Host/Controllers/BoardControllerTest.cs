@@ -35,6 +35,7 @@ public partial class BoardControllerTest
         await AddChoresShouldAddChoreToBoard(boardId);
         await RemoveChoresShouldRemoveChoreFromBoard(boardId);
         await AddCollaboratorsShouldAddCollaboratorsToBoard(boardId);
+        await RemoveCollaboratorsShouldRemoveCollaboratorsFromBoard(boardId);
         await DeleteByIdShouldRemoveBoard(boardId);
     }
 
@@ -135,5 +136,24 @@ public partial class BoardControllerTest
         var result = JsonConvert.DeserializeObject<Board>(responseString);
 
         result.Collaborators.Should().NotBeEmpty();
+    }
+
+    private async Task RemoveCollaboratorsShouldRemoveCollaboratorsFromBoard(string boardId)
+    {
+        var collaboratorId = "12aacc62-254f-4f2e-9825-049ce8872bae";
+        
+        var request = new BoardCollaboratorsRequest()
+        {
+            CollaboratorIds = new List<string>{ collaboratorId }
+        };
+        
+        var json = JsonConvert.SerializeObject(request);
+        var data = new StringContent(json, Encoding.UTF8, "application/json");
+
+        var response = await _client.PostAsync($"api/board/{boardId}/collaborators/remove", data);
+        var responseString = await response.Content.ReadAsStringAsync();
+        var result = JsonConvert.DeserializeObject<Board>(responseString);
+
+        result.Collaborators.Should().BeEmpty();
     }
 }

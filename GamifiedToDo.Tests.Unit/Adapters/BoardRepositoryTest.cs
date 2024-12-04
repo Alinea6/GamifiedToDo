@@ -236,4 +236,22 @@ public class BoardRepositoryTest
         result.Collaborators.Count().Should().Be(1);
         result.Collaborators.First().Id.Should().Be("fake-user-5");
     }
+
+    [Test]
+    public async Task RemoveCollaborators_should_remove_collaborators_from_the_board()
+    {
+        var input = new BoardCollaboratorsInput
+        {
+            Id = "fake-board-1",
+            UserId = "fake-user-5",
+            CollaboratorIds = new List<string>
+            {
+                "fake-user-7"
+            }
+        };
+
+        var result = await _sut.RemoveCollaborators(input);
+
+        result.Collaborators.Should().BeEmpty();
+    }
 }
