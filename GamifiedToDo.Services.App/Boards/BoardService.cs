@@ -41,4 +41,9 @@ public class BoardService : IBoardService
     {
         return _boardRepository.RemoveChores(input, cancellationToken);
     }
+
+    public Task<Board> AddCollaborators(BoardCollaboratorsInput input, CancellationToken cancellationToken = default)
+    {
+        return _boardRepository.AddCollaborators(input, cancellationToken);
+    }
 }

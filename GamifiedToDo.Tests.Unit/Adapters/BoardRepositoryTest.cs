@@ -217,4 +217,23 @@ public class BoardRepositoryTest
 
         result.Chores.Count().Should().Be(0);
     }
+
+    [Test]
+    public async Task AddCollaborators_should_add_collaborators_to_the_board()
+    {
+        var input = new BoardCollaboratorsInput()
+        {
+            Id = "fake-board-3",
+            UserId = "fake-user-7",
+            CollaboratorIds = new List<string>
+            {
+                "fake-user-5"
+            }
+        };
+
+        var result = await _sut.AddCollaborators(input);
+
+        result.Collaborators.Count().Should().Be(1);
+        result.Collaborators.First().Id.Should().Be("fake-user-5");
+    }
 }

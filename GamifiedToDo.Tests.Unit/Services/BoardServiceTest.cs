@@ -112,4 +112,18 @@ public class BoardServiceTest
 
         result.Should().Be(expected);
     }
+
+    [Test]
+    public async Task AddCollaborators_should_call_board_repository()
+    {
+        var input = new BoardCollaboratorsInput();
+        var expected = new Board();
+
+        _boardRepositoryMock.Setup(x => x.AddCollaborators(input, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(expected);
+        
+        var result = await _sut.AddCollaborators(input);
+
+        result.Should().Be(expected);
+    }
 }

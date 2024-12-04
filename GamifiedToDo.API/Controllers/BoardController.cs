@@ -71,4 +71,16 @@ public class BoardController : ControllerBase
             ChoreIds = request.ChoreIds
         }, cancellationToken);
     }
+
+    [HttpPost("{boardId}/collaborators/add")]
+    public Task<Board> AddCollaborators(string boardId, BoardCollaboratorsRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        return _boardService.AddCollaborators(new BoardCollaboratorsInput
+        {
+            Id = boardId,
+            UserId = GetUserId(),
+            CollaboratorIds = request.CollaboratorIds
+        }, cancellationToken);
+    }
 }
