@@ -11,4 +11,5 @@ public interface IBoardRepository
     Task<Board> AddChores(BoardChoresInput input, CancellationToken cancellationToken = default);
     Task<Board> RemoveChores(BoardChoresInput input, CancellationToken cancellationToken = default);
     Task<Board> AddCollaborators(BoardCollaboratorsInput input, CancellationToken cancellationToken = default);
+    Task<Board> RemoveCollaborators(BoardCollaboratorsInput input, CancellationToken cancellationToken = default);
 }
