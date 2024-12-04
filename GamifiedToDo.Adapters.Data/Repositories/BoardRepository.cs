@@ -48,16 +48,16 @@ public class BoardRepository : IBoardRepository
         };
 
         _context.Add(board);
-        await _context.SaveChangesAsync(cancellationToken);
+        await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         return MapToBoard(board, input.UserId);
     }
 
     public async Task DeleteById(string boardId, string userId, CancellationToken cancellationToken = default)
     {
-        var board = await GetByBoardIdAndUserId(boardId, userId, cancellationToken);
+        var board = await GetByBoardIdAndUserId(boardId, userId, cancellationToken).ConfigureAwait(false);
         
         _context.Remove(board);
-        await _context.SaveChangesAsync(cancellationToken);
+        await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<IEnumerable<BoardListItem>> GetUserBoards(string userId, CancellationToken cancellationToken = default)
@@ -66,7 +66,7 @@ public class BoardRepository : IBoardRepository
             .Include(x => x.Collaborators)
             .Include(x => x.Owner)
             .Where(b => b.UserId == userId || b.Collaborators.Any(x => x.Id == userId))
-            .ToListAsync(cancellationToken);
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
 
         return boards.Select(x => MapToBoardListItem(x, userId, MapToUser(x.Owner)));
     }
@@ -77,7 +77,7 @@ public class BoardRepository : IBoardRepository
 
         var chores = await _context.Chores
             .Where(x => input.ChoreIds.Contains(x.Id) && x.UserId == input.UserId)
-            .ToListAsync(cancellationToken);
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
 
         foreach (var chore in chores)
         {
@@ -98,6 +98,24 @@ public class BoardRepository : IBoardRepository
         foreach (var chore in choresToRemove)
         {
             board.Chores.Remove(chore);
+        }
+
+        await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+
+        return MapToBoard(board, input.UserId);
+    }
+
+    public async Task<Board> AddCollaborators(BoardCollaboratorsInput input, CancellationToken cancellationToken = default)
+    {
+        var board = await GetByBoardIdAndUserId(input.Id, input.UserId, cancellationToken).ConfigureAwait(false);
+
+        var collaborators = await _context.Users
+            .Where(x => input.CollaboratorIds.Contains(x.Id))
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
+
+        foreach (var collaborator in collaborators)
+        {
+            board.Collaborators.Add(collaborator);
         }
 
         await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
