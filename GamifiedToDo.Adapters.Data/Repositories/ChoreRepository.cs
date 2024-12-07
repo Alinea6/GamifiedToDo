@@ -68,7 +68,7 @@ public class ChoreRepository : IChoreRepository
 
     public async Task<Chore> UpdateStatusById(ChoreUpdateStatusInput input, CancellationToken cancellationToken = default)
     {
-        var chore = await GetChoreByIdAndUserId(input.Id, input.UserId, cancellationToken);
+        var chore = await GetChoreByIdAndUserIdOrBoardCollaboratorId(input.Id, input.UserId, cancellationToken);
 
         chore.Status = input.Status.ToString();
 
@@ -98,6 +98,25 @@ public class ChoreRepository : IChoreRepository
     {
         var chore = await _context.Chores
             .Where(c => c.Id == choreId && c.UserId == userId)
+            .SingleOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+
+        if (chore == null)
+        {
+            throw new Exception($"Chore with id {choreId} for user {userId} was not found");
+        }
+
+        return chore;
+    }
+    
+    private async Task<Models.Chore> GetChoreByIdAndUserIdOrBoardCollaboratorId(
+        string choreId, 
+        string userId, 
+        CancellationToken cancellationToken = default)
+    {
+        var chore = await _context.Chores
+            .Include(x => x.Boards)
+            .Where(c => (c.Id == choreId && c.UserId == userId) ||
+                        c.Id == choreId && c.Boards.Any(x => x.UserId == userId || x.Collaborators.Any(u => u.Id == userId)))
             .SingleOrDefaultAsync(cancellationToken).ConfigureAwait(false);
 
         if (chore == null)

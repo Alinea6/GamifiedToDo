@@ -13,8 +13,8 @@ public static class FakeDbContextProvider
             .Options;
         var context = new DataContext(options);
 
-        var chores = GenerateChores();
         var users = GenerateUsers();
+        var chores = GenerateChores();
         var userLevels = GenerateUserLevels();
         var boards = GenerateBoards(chores, users);
         

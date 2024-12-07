@@ -219,4 +219,30 @@ public class ChoreRepositoryTest
         await act.Should().ThrowAsync<Exception>()
             .WithMessage("Chore with id fake-id-99 for user fake-user-99 was not found");
     }
+    
+    [Test]
+    public async Task UpdateStatusById_should_update_chore_status_by_collaborator_id()
+    {
+        var input = new ChoreUpdateStatusInput
+        {
+            Id = "fake-chore-id-1",
+            UserId = "fake-user-7",
+            Status = ChoreStatus.Done
+        };
+        var expected = new Chore
+        {
+            Id = "fake-chore-id-1",
+            UserId = "fake-user-5",
+            ChoreText = "fake-chore-text-1",
+            Status = ChoreStatus.Done,
+            Difficulty = ChoreDifficulty.Simple,
+            Category = ChoreCategory.SelfImprovement
+        };
+        
+        // act
+        var result = await _sut.UpdateStatusById(input);
+        
+        // assert
+        result.Should().BeEquivalentTo(expected);
+    }
 }
