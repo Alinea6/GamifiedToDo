@@ -1,6 +1,7 @@
 using FluentAssertions;
 using GamifiedToDo.Services.App.Chores;
 using GamifiedToDo.Services.App.Dep.Chores;
+using GamifiedToDo.Services.App.Int.Boards;
 using GamifiedToDo.Services.App.Int.Chores;
 using GamifiedToDo.Services.App.Int.UserLevels;
 using GamifiedToDo.Tests.Unit.Helpers;
@@ -14,13 +15,18 @@ public class ChoreServiceTest
     private ChoreService _sut;
     private Mock<IChoreRepository> _choreRepositoryMock;
     private Mock<IUserLevelService> _userLevelServiceMock;
+    private Mock<IBoardService> _boardServiceMock;
 
     [SetUp]
     public void SetUp()
     {
         _choreRepositoryMock = new Mock<IChoreRepository>(MockBehavior.Strict);
         _userLevelServiceMock = new Mock<IUserLevelService>(MockBehavior.Strict);
-        _sut = new ChoreService(_choreRepositoryMock.Object, _userLevelServiceMock.Object);
+        _boardServiceMock = new Mock<IBoardService>(MockBehavior.Strict);
+        _sut = new ChoreService(
+            _choreRepositoryMock.Object, 
+            _userLevelServiceMock.Object,
+            _boardServiceMock.Object);
     }
 
     [TearDown]
@@ -28,6 +34,7 @@ public class ChoreServiceTest
     {
         _choreRepositoryMock.VerifyAll();
         _userLevelServiceMock.VerifyAll();
+        _boardServiceMock.VerifyAll();
     }
 
     [Test]
@@ -84,6 +91,41 @@ public class ChoreServiceTest
         var result = await _sut.AddChore(input);
 
         result.Should().Be(expected);
+    }
+    
+    [Test]
+    public async Task AddChore_should_call_chore_repository_and_board_repository_when_boardId_is_filled_and_return_chore()
+    {
+        // arrange
+        var input = new ChoreAddInput
+        {
+            UserId = "fake-user-id",
+            BoardId = "fake-board-id"
+        };
+        var boardInput = new BoardChoresInput
+        {
+            Id = "fake-board-id",
+            UserId = "fake-user-id",
+            ChoreIds = new List<string> { "fake-chore-id" }
+        };
+        var expected = new Chore
+        {
+            Id = "fake-chore-id"
+        };
+
+        _choreRepositoryMock.Setup(x => x.AddChore(
+                MoqHandler.IsEquivalentTo(input), 
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync(expected);
+
+        _boardServiceMock.Setup(x => x.AddChores(
+                MoqHandler.IsEquivalentTo(boardInput),
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new Board());
+
+        var result = await _sut.AddChore(input);
+
+        result.Should().BeEquivalentTo(expected);
     }
 
     [Test]
