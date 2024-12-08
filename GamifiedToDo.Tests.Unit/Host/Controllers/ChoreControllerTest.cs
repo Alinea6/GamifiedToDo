@@ -96,7 +96,8 @@ public class ChoreControllerTest
         {
             ChoreText = "fake-chore-text",
             Difficulty = ChoreDifficulty.Simple,
-            Category = ChoreCategory.Cleaning
+            Category = ChoreCategory.Cleaning,
+            BoardId = "fake-board-id"
         };
         var input = new ChoreAddInput
         {
@@ -104,7 +105,8 @@ public class ChoreControllerTest
             ChoreText = "fake-chore-text",
             Status = ChoreStatus.ToDo,
             Difficulty = ChoreDifficulty.Simple,
-            Category = ChoreCategory.Cleaning
+            Category = ChoreCategory.Cleaning,
+            BoardId = "fake-board-id"
         };
 
         _choreServiceMock.Setup(x => x.AddChore(MoqHandler.IsEquivalentTo(input),

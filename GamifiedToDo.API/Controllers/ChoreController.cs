@@ -1,5 +1,4 @@
 using GamifiedToDo.API.Models.Chores;
-using GamifiedToDo.Services.App.Int;
 using GamifiedToDo.Services.App.Int.Chores;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -39,7 +38,8 @@ public class ChoreController : ControllerBase
             UserId = GetUserId(),
             Status = ChoreStatus.ToDo,
             Difficulty = request.Difficulty,
-            Category = request.Category
+            Category = request.Category,
+            BoardId = request.BoardId
         }, cancellationToken);
     }
 
