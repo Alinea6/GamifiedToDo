@@ -88,4 +88,24 @@ public class UserRepositoryTest
         // assert
         await act.Should().ThrowAsync<Exception>().WithMessage("Incorrect login or password");
     }
+
+    [Test]
+    public async Task GetUsers_should_return_all_users_when_search_string_is_empty()
+    {
+        // act
+        var result = await _sut.GetUsers();
+
+        result.Count().Should().Be(3);
+    }
+
+    [Test]
+    public async Task GetUsers_should_return_users_that_match_search_string()
+    {
+        var result = await _sut.GetUsers("2");
+
+        var enumerable = result as GamifiedToDo.Services.App.Int.Users.User[] ?? result.ToArray();
+        
+        enumerable.Count().Should().Be(1);
+        enumerable.First().Login.Should().Be("fake-login-2");
+    }
 }
