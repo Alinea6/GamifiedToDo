@@ -4,6 +4,7 @@ using System.Text;
 using FluentAssertions;
 using GamifiedToDo.API.Models;
 using GamifiedToDo.API.Models.Users;
+using GamifiedToDo.Services.App.Int.Users;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Newtonsoft.Json;
 using NUnit.Framework;
@@ -29,6 +30,7 @@ public partial class UserControllerTest
     {
         var userLogin = await RegisterShouldReturnUserId();
         await LoginShouldReturnToken(userLogin);
+        await GetUsersShouldReturnListOfUsers();
     }
 
     private async Task<string> RegisterShouldReturnUserId()
@@ -69,5 +71,15 @@ public partial class UserControllerTest
         responseString.Should().NotBeEmpty();
         responseString.Should().NotBeNull();
         response.StatusCode.Should().Be(HttpStatusCode.OK);
+    }
+
+    private async Task GetUsersShouldReturnListOfUsers()
+    {
+        var response = await _client.GetAsync("api/user");
+        var responseString = await response.Content.ReadAsStringAsync();
+        var result = JsonConvert.DeserializeObject<List<User>>(responseString);
+
+        result.Should().NotBeNull();
+        result.Should().NotBeEmpty();
     }
 }

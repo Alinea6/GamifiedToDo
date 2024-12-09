@@ -36,4 +36,10 @@ public class UserController : ControllerBase
             Password = request.Password
         }, cancellationToken);
     }
+
+    [HttpGet]
+    public Task<IEnumerable<User>> GetUsers([FromQuery] string? search = null, CancellationToken cancellationToken = default)
+    {
+        return _userService.GetUsers(search, cancellationToken);
+    }
 }

@@ -3,6 +3,7 @@ using GamifiedToDo.Adapters.Data.Models;
 using GamifiedToDo.Services.App.Dep.Users;
 using GamifiedToDo.Services.App.Int.Users;
 using Microsoft.EntityFrameworkCore;
+using User = GamifiedToDo.Services.App.Int.Users.User;
 
 namespace GamifiedToDo.Adapters.Data.Repositories;
 
@@ -53,5 +54,29 @@ public class UserRepository : IUserRepository
         JwtSecurityToken jwtSecurityToken = _jwtProvider.GenerateToken(user.Id);
 
         return new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
+    }
+
+    public async Task<IEnumerable<User>> GetUsers(string? search = null, CancellationToken cancellationToken = default)
+    {
+        IQueryable<Models.User> query = _dataContext.Users;
+
+        if (!string.IsNullOrEmpty(search))
+        {
+            query = query.Where(x => x.Login.ToLower().Contains(search.ToLower()));
+        }
+
+        var users = await query
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
+
+        return users.Select(MapToUser);
+    }
+    
+    private static User MapToUser(Models.User user)
+    {
+        return new User
+        {
+            Id = user.Id,
+            Login = user.Login
+        };
     }
 }

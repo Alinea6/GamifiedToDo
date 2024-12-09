@@ -55,4 +55,17 @@ public class UserServiceTest
         // assert
         result.Should().Be("fake-token");
     }
+
+    [Test]
+    public async Task GetUsers_should_call_user_repository_and_return_list_of_users()
+    {
+        var expected = new List<User>();
+
+        _userRepositoryMock.Setup(x => x.GetUsers("search-string", It.IsAny<CancellationToken>()))
+            .ReturnsAsync(expected);
+
+        var result = await _sut.GetUsers("search-string");
+
+        result.Should().BeEquivalentTo(expected);
+    }
 }
