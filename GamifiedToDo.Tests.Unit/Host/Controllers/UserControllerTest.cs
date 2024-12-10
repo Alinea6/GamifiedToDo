@@ -82,12 +82,20 @@ public class UserControllerTest
     [Test]
     public async Task GetUsers_should_call_user_service_and_return_list_of_users()
     {
+        var input = new GetUsersInput
+        {
+            Search = "fake-search",
+            PageSize = 10,
+            PageNumber = 10
+        };
         var expected = new List<User>();
         
-        _userServiceMock.Setup(x => x.GetUsers("search-string", It.IsAny<CancellationToken>()))
+        _userServiceMock.Setup(x => x.GetUsers(
+                MoqHandler.IsEquivalentTo(input), 
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(expected);
 
-        var result = await _sut.GetUsers("search-string");
+        var result = await _sut.GetUsers("fake-search", 10, 10);
 
         result.Should().BeEquivalentTo(expected);
     }
