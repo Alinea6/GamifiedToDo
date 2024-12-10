@@ -56,13 +56,20 @@ public class UserRepository : IUserRepository
         return new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
     }
 
-    public async Task<IEnumerable<User>> GetUsers(string? search = null, CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<User>> GetUsers(GetUsersInput input, CancellationToken cancellationToken = default)
     {
         IQueryable<Models.User> query = _dataContext.Users;
 
-        if (!string.IsNullOrEmpty(search))
+        if (!string.IsNullOrEmpty(input.Search))
         {
-            query = query.Where(x => x.Login.ToLower().Contains(search.ToLower()));
+            query = query.Where(x => x.Login.ToLower().Contains(input.Search.ToLower()));
+        }
+
+        if (input is { PageNumber: >= 0, PageSize: >= 0 })
+        {
+            query = query
+                .Skip(((int)input.PageNumber - 1) * (int)input.PageSize)
+                .Take((int)input.PageSize);
         }
 
         var users = await query

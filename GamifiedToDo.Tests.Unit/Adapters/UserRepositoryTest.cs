@@ -92,8 +92,10 @@ public class UserRepositoryTest
     [Test]
     public async Task GetUsers_should_return_all_users_when_search_string_is_empty()
     {
+        var input = new GetUsersInput();
+        
         // act
-        var result = await _sut.GetUsers();
+        var result = await _sut.GetUsers(input);
 
         result.Count().Should().Be(3);
     }
@@ -101,11 +103,33 @@ public class UserRepositoryTest
     [Test]
     public async Task GetUsers_should_return_users_that_match_search_string()
     {
-        var result = await _sut.GetUsers("2");
+        var input = new GetUsersInput
+        {
+            Search = "2"
+        };
+        
+        var result = await _sut.GetUsers(input);
 
         var enumerable = result as GamifiedToDo.Services.App.Int.Users.User[] ?? result.ToArray();
         
         enumerable.Count().Should().Be(1);
         enumerable.First().Login.Should().Be("fake-login-2");
+    }
+
+    [Test]
+    public async Task GetUsers_should_return_users_after_pagination()
+    {
+        var input = new GetUsersInput
+        {
+            PageSize = 2,
+            PageNumber = 2
+        };
+        
+        var result = await _sut.GetUsers(input);
+        
+        var enumerable = result as GamifiedToDo.Services.App.Int.Users.User[] ?? result.ToArray();
+        
+        enumerable.Count().Should().Be(1);
+        enumerable.First().Login.Should().Be("fake-login-3");
     }
 }

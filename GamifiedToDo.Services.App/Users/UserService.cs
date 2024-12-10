@@ -22,8 +22,8 @@ public class UserService : IUserService
         return _userRepository.Login(input, cancellationToken);
     }
 
-    public Task<IEnumerable<User>> GetUsers(string? search = null, CancellationToken cancellationToken = default)
+    public Task<IEnumerable<User>> GetUsers(GetUsersInput input, CancellationToken cancellationToken = default)
     {
-        return _userRepository.GetUsers(search, cancellationToken);
+        return _userRepository.GetUsers(input, cancellationToken);
     }
 }

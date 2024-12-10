@@ -38,8 +38,17 @@ public class UserController : ControllerBase
     }
 
     [HttpGet]
-    public Task<IEnumerable<User>> GetUsers([FromQuery] string? search = null, CancellationToken cancellationToken = default)
+    public Task<IEnumerable<User>> GetUsers(
+        [FromQuery] string? search = null, 
+        int? pageNumber = null,
+        int? pageSize = null,
+        CancellationToken cancellationToken = default)
     {
-        return _userService.GetUsers(search, cancellationToken);
+        return _userService.GetUsers(new GetUsersInput
+        {
+            Search = search,
+            PageNumber = pageNumber,
+            PageSize = pageSize,
+        }, cancellationToken);
     }
 }

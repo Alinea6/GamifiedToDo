@@ -59,12 +59,13 @@ public class UserServiceTest
     [Test]
     public async Task GetUsers_should_call_user_repository_and_return_list_of_users()
     {
+        var input = new GetUsersInput();
         var expected = new List<User>();
 
-        _userRepositoryMock.Setup(x => x.GetUsers("search-string", It.IsAny<CancellationToken>()))
+        _userRepositoryMock.Setup(x => x.GetUsers(input, It.IsAny<CancellationToken>()))
             .ReturnsAsync(expected);
 
-        var result = await _sut.GetUsers("search-string");
+        var result = await _sut.GetUsers(input);
 
         result.Should().BeEquivalentTo(expected);
     }
