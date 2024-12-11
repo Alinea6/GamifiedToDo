@@ -57,4 +57,20 @@ public class FriendRequestRepository : IFriendRequestRepository
         
         await _dataContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
     }
+
+    public async Task RemoveFriendRequest(string requestId, string userId, CancellationToken cancellationToken = default)
+    {
+        var request = await _dataContext.FriendRequests
+            .Where(x => x.Id == requestId 
+                        && (x.FriendId == userId || x.UserId == userId))
+            .FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+        
+        if (request == null)
+        {
+            throw new Exception("Friend request not found");
+        }
+        
+        _dataContext.Remove(request);
+        await _dataContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+    }
 }
