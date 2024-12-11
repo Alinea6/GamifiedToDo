@@ -62,4 +62,14 @@ public class UserController : ControllerBase
                 FriendId = request.FriendId
             }, cancellationToken);
     }
+
+    [HttpGet("friends/{requesterId}/accept")]
+    public Task AcceptFriendRequest(string requesterId, CancellationToken cancellationToken = default)
+    {
+        return _userService.AcceptFriendRequest(new FriendRequestInput
+        {
+            UserId = requesterId,
+            FriendId = GetUserId()
+        }, cancellationToken);
+    }
 }

@@ -142,4 +142,23 @@ public class UserControllerTest
 
         await act.Should().NotThrowAsync();
     }
+    
+    [Test]
+    public async Task AcceptFriendRequest_should_call_user_service()
+    {
+
+        var input = new FriendRequestInput
+        {
+            UserId = "fake-requester-id",
+            FriendId = UserId
+        };
+
+        _userServiceMock.Setup(x =>
+                x.AcceptFriendRequest(MoqHandler.IsEquivalentTo(input), It.IsAny<CancellationToken>()))
+            .Returns(Task.CompletedTask);
+
+        var act = () => _sut.AcceptFriendRequest("fake-requester-id");
+
+        await act.Should().NotThrowAsync();
+    }
 }
