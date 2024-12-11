@@ -1,9 +1,12 @@
+using System.Security.Claims;
 using FluentAssertions;
 using GamifiedToDo.API.Controllers;
 using GamifiedToDo.API.Models;
 using GamifiedToDo.API.Models.Users;
 using GamifiedToDo.Services.App.Int.Users;
 using GamifiedToDo.Tests.Unit.Helpers;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
 
@@ -13,12 +16,29 @@ public class UserControllerTest
 {
     private UserController _sut;
     private Mock<IUserService> _userServiceMock;
+    private const string UserId = "fake-user-id";
 
     [SetUp]
     public void SetUp()
     {
         _userServiceMock = new Mock<IUserService>(MockBehavior.Strict);
         _sut = new UserController(_userServiceMock.Object);
+        
+        var context = new DefaultHttpContext();
+
+        var claims = new List<Claim>
+        {
+            new(ClaimTypes.Name, "fake-user-id"),
+        };
+        var identity = new ClaimsIdentity(claims, "TestAuthType");
+        var claimsPrincipal = new ClaimsPrincipal(identity);
+
+        context.User = claimsPrincipal;
+
+        _sut.ControllerContext = new ControllerContext
+        {
+            HttpContext = context
+        };
     }
 
     [TearDown]
@@ -98,5 +118,28 @@ public class UserControllerTest
         var result = await _sut.GetUsers("fake-search", 10, 10);
 
         result.Should().BeEquivalentTo(expected);
+    }
+
+    [Test]
+    public async Task CreateFriendRequest_should_call_user_service()
+    {
+        var request = new FriendRequest
+        {
+            FriendId = "fake-friend-id"
+        };
+
+        var input = new FriendRequestInput
+        {
+            UserId = UserId,
+            FriendId = "fake-friend-id"
+        };
+
+        _userServiceMock.Setup(x =>
+                x.CreateFriendRequest(MoqHandler.IsEquivalentTo(input), It.IsAny<CancellationToken>()))
+            .Returns(Task.CompletedTask);
+
+        var act = () => _sut.CreateFriendRequest(request);
+
+        await act.Should().NotThrowAsync();
     }
 }

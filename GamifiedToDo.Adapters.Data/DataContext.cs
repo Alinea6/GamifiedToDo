@@ -9,6 +9,7 @@ public class DataContext : DbContext
     public DbSet<User> Users { get; set; }
     public DbSet<UserLevel> UserLevels { get; set; }
     public DbSet<Board> Boards { get; set; }
+    public DbSet<FriendRequest> FriendRequests { get; set; }
     
     public DataContext(DbContextOptions<DataContext> options) : base(options)
     {
@@ -20,6 +21,7 @@ public class DataContext : DbContext
         ConfigureUsers(modelBuilder);
         ConfigureUserLevels(modelBuilder);
         ConfigureBoards(modelBuilder);
+        ConfigureFriendRequests(modelBuilder);
         
         base.OnModelCreating(modelBuilder);
     }
@@ -77,5 +79,20 @@ public class DataContext : DbContext
         modelBuilder.Entity<Board>()
             .HasMany(e => e.Chores)
             .WithMany(e => e.Boards);
+    }
+
+    private void ConfigureFriendRequests(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<FriendRequest>()
+            .HasIndex(r => r.Id)
+            .IsUnique();
+
+        modelBuilder.Entity<FriendRequest>()
+            .HasOne(u => u.User)
+            .WithOne();
+
+        modelBuilder.Entity<FriendRequest>()
+            .HasOne(r => r.Friend)
+            .WithOne();
     }
 }

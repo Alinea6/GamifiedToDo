@@ -17,11 +17,13 @@ public static class FakeDbContextProvider
         var chores = GenerateChores();
         var userLevels = GenerateUserLevels();
         var boards = GenerateBoards(chores, users);
+        var requests = GenerateFriendRequests();
         
         context.Chores.AddRange(chores);
         context.Users.AddRange(users);
         context.UserLevels.AddRange(userLevels);
         context.Boards.AddRange(boards);
+        context.FriendRequests.AddRange(requests);
         context.SaveChangesAsync();
         
         return context;
@@ -156,5 +158,10 @@ public static class FakeDbContextProvider
                 Owner = users[2]
             }
         ];
+    }
+
+    private static FriendRequest[] GenerateFriendRequests()
+    {
+        return [];
     }
 }
