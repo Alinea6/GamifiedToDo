@@ -9,6 +9,7 @@ using GamifiedToDo.Services.App.Boards;
 using GamifiedToDo.Services.App.Chores;
 using GamifiedToDo.Services.App.Dep.Boards;
 using GamifiedToDo.Services.App.Dep.Chores;
+using GamifiedToDo.Services.App.Dep.FriendRequests;
 using GamifiedToDo.Services.App.Dep.UserLevels;
 using GamifiedToDo.Services.App.Dep.Users;
 using GamifiedToDo.Services.App.Int.Boards;
@@ -42,7 +43,8 @@ public static class ExtensionMethods
         services
             .AddScoped<IUserService, UserService>()
             .AddScoped<IUserRepository, UserRepository>()
-            .AddScoped<IJsonWebTokenProvider, JsonWebTokenProvider>();
+            .AddScoped<IJsonWebTokenProvider, JsonWebTokenProvider>()
+            .AddScoped<IFriendRequestRepository, FriendRequestRepository>();
 
         services
             .AddScoped<IBoardService, BoardService>()

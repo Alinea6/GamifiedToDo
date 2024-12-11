@@ -51,4 +51,15 @@ public class UserController : ControllerBase
             PageSize = pageSize,
         }, cancellationToken);
     }
+
+    [HttpPost("friends/request")]
+    public Task CreateFriendRequest(FriendRequest request, CancellationToken cancellationToken = default)
+    {
+        return _userService.CreateFriendRequest(
+            new FriendRequestInput
+            {
+                UserId = GetUserId(),
+                FriendId = request.FriendId
+            }, cancellationToken);
+    }
 }

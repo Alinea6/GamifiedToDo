@@ -1,4 +1,5 @@
 using FluentAssertions;
+using GamifiedToDo.Services.App.Dep.FriendRequests;
 using GamifiedToDo.Services.App.Dep.Users;
 using GamifiedToDo.Services.App.Int.Users;
 using GamifiedToDo.Services.App.Users;
@@ -11,18 +12,21 @@ public class UserServiceTest
 {
     private UserService _sut;
     private Mock<IUserRepository> _userRepositoryMock;
+    private Mock<IFriendRequestRepository> _friendRequestRepositoryMock;
 
     [SetUp]
     public void SetUp()
     {
         _userRepositoryMock = new Mock<IUserRepository>(MockBehavior.Strict);
-        _sut = new UserService(_userRepositoryMock.Object);
+        _friendRequestRepositoryMock = new Mock<IFriendRequestRepository>(MockBehavior.Strict);
+        _sut = new UserService(_userRepositoryMock.Object, _friendRequestRepositoryMock.Object);
     }
 
     [TearDown]
     public void TearDown()
     {
         _userRepositoryMock.VerifyAll();
+        _friendRequestRepositoryMock.VerifyAll();
     }
 
     [Test]
@@ -68,5 +72,18 @@ public class UserServiceTest
         var result = await _sut.GetUsers(input);
 
         result.Should().BeEquivalentTo(expected);
+    }
+
+    [Test]
+    public async Task CreateFriendRequest_should_call_friend_request_repository()
+    {
+        var input = new FriendRequestInput();
+
+        _friendRequestRepositoryMock.Setup(x => x.CreateFriendRequest(input, It.IsAny<CancellationToken>()))
+            .Returns(Task.CompletedTask);
+        
+        var act = () => _sut.CreateFriendRequest(input);
+
+        await act.Should().NotThrowAsync();
     }
 }
