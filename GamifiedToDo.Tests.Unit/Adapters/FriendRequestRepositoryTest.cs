@@ -101,4 +101,26 @@ public class FriendRequestRepositoryTest
 
         await act.Should().ThrowAsync<Exception>().WithMessage("Friend request not found");
     }
+    
+    [Test]
+    public async Task RemoveFriendRequest_should_remove_request_when_requester_in_userId()
+    {
+        var originalCount = _context.FriendRequests.Count();
+
+        var act = () => _sut.RemoveFriendRequest("fake-request-1", "fake-user-5");
+
+        await act.Should().NotThrowAsync();
+        _context.FriendRequests.Count().Should().Be(originalCount-1);
+    }
+    
+    [Test]
+    public async Task RemoveFriendRequest_should_remove_request_when_friend_in_userId()
+    {
+        var originalCount = _context.FriendRequests.Count();
+
+        var act = () => _sut.RemoveFriendRequest("fake-request-1", "fake-user-6");
+
+        await act.Should().NotThrowAsync();
+        _context.FriendRequests.Count().Should().Be(originalCount-1);
+    }
 }

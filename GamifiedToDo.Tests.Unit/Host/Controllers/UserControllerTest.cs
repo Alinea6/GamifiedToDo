@@ -161,4 +161,18 @@ public class UserControllerTest
 
         await act.Should().NotThrowAsync();
     }
+    
+    [Test]
+    public async Task RemoveFriendRequest_should_call_user_service()
+    {
+        var requestId = "fake-request-id";
+        
+        _userServiceMock.Setup(x =>
+                x.RemoveFriendRequest(requestId, UserId, It.IsAny<CancellationToken>()))
+            .Returns(Task.CompletedTask);
+
+        var act = () => _sut.RemoveFriendRequest(requestId);
+
+        await act.Should().NotThrowAsync();
+    }
 }

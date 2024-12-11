@@ -41,4 +41,9 @@ public class UserService : IUserService
     {
         return _friendRequestRepository.AcceptFriendRequest(input, cancellationToken);
     }
+
+    public Task RemoveFriendRequest(string requestId, string userId, CancellationToken cancellationToken = default)
+    {
+        return _friendRequestRepository.RemoveFriendRequest(requestId, userId, cancellationToken);
+    }
 }

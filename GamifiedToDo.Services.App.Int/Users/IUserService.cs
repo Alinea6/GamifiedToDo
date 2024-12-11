@@ -7,4 +7,5 @@ public interface IUserService
     Task<IEnumerable<User>> GetUsers(GetUsersInput input, CancellationToken cancellationToken = default);
     Task CreateFriendRequest(FriendRequestInput input, CancellationToken cancellationToken = default);
     Task AcceptFriendRequest(FriendRequestInput input, CancellationToken cancellationToken = default);
+    Task RemoveFriendRequest(string requestId, string userId, CancellationToken cancellationToken = default);
 }

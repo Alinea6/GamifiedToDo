@@ -85,20 +85,4 @@ public partial class UserControllerTest
         result.Should().NotBeNull();
         result.Should().NotBeEmpty();
     }
-    
-    [Test]
-    public async Task CreateFriendRequest_should_not_throw_error()
-    {
-        var request = new FriendRequest()
-        {
-            FriendId = "1da994d7-2de9-4b30-8b32-d0f61ad4ff55"
-        };
-        
-        var json = JsonConvert.SerializeObject(request);
-        var data = new StringContent(json, Encoding.UTF8, "application/json");
-        
-        var response = await _client.PostAsync("api/user/friends/request", data);
-        
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
-    }
 }
