@@ -2,6 +2,7 @@ using FluentAssertions;
 using GamifiedToDo.Adapters.Data;
 using GamifiedToDo.Adapters.Data.Repositories;
 using GamifiedToDo.Services.App.Int.Users;
+using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 
 namespace GamifiedToDo.Tests.Unit.Adapters;
@@ -24,8 +25,8 @@ public class FriendRequestRepositoryTest
         var originalCount = _context.FriendRequests.Count();
         var input = new FriendRequestInput
         {
-            UserId = "fake-user-5",
-            FriendId = "fake-user-6"
+            UserId = "fake-user-6",
+            FriendId = "fake-user-7"
         };
 
         var act = () => _sut.CreateFriendRequest(input);
@@ -64,5 +65,40 @@ public class FriendRequestRepositoryTest
 
         await act.Should().ThrowAsync<InvalidOperationException>();
         _context.FriendRequests.Count().Should().Be(originalCount);
+    }
+    
+    [Test]
+    public async Task AcceptFriendRequest_should_remove_request_and_friends_to_users()
+    {
+        var originalCount = _context.FriendRequests.Count();
+        var input = new FriendRequestInput
+        {
+            UserId = "fake-user-5",
+            FriendId = "fake-user-6"
+        };
+
+        var act = () => _sut.AcceptFriendRequest(input);
+
+        await act.Should().NotThrowAsync();
+        _context.FriendRequests.Count().Should().Be(originalCount-1);
+        _context.Users.Include(x => x.Friends)
+            .First(x => x.Id == "fake-user-5").Friends.Should().NotBeEmpty();
+        _context.Users.Include(x => x.Friends)
+            .First(x => x.Id == "fake-user-6").Friends.Should().NotBeEmpty();
+    }
+    
+    [Test]
+    public async Task AcceptFriendRequest_should_throw_exception_when_request_is_not_found()
+    {
+        var originalCount = _context.FriendRequests.Count();
+        var input = new FriendRequestInput
+        {
+            UserId = "fake-user-66",
+            FriendId = "fake-user-6"
+        };
+
+        var act = () => _sut.AcceptFriendRequest(input);
+
+        await act.Should().ThrowAsync<Exception>().WithMessage("Friend request not found");
     }
 }

@@ -17,7 +17,7 @@ public static class FakeDbContextProvider
         var chores = GenerateChores();
         var userLevels = GenerateUserLevels();
         var boards = GenerateBoards(chores, users);
-        var requests = GenerateFriendRequests();
+        var requests = GenerateFriendRequests(users);
         
         context.Chores.AddRange(chores);
         context.Users.AddRange(users);
@@ -160,8 +160,18 @@ public static class FakeDbContextProvider
         ];
     }
 
-    private static FriendRequest[] GenerateFriendRequests()
+    private static FriendRequest[] GenerateFriendRequests(User[] users)
     {
-        return [];
+        return 
+        [
+            new FriendRequest
+            {
+                Id = "fake-request-1",
+                UserId = "fake-user-5",
+                FriendId = "fake-user-6",
+                User = users[0],
+                Friend = users[1]
+            }
+        ];
     }
 }

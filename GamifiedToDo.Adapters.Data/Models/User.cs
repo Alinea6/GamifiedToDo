@@ -24,4 +24,6 @@ public class User
     public UserLevel UserLevel { get; set; }
 
     public ICollection<Board> CollaborationBoards { get; set; } = [];
+    
+    public ICollection<User> Friends { get; set; } = [];
 }

@@ -86,4 +86,17 @@ public class UserServiceTest
 
         await act.Should().NotThrowAsync();
     }
+    
+    [Test]
+    public async Task AcceptFriendRequest_should_call_friend_request_repository()
+    {
+        var input = new FriendRequestInput();
+
+        _friendRequestRepositoryMock.Setup(x => x.AcceptFriendRequest(input, It.IsAny<CancellationToken>()))
+            .Returns(Task.CompletedTask);
+        
+        var act = () => _sut.AcceptFriendRequest(input);
+
+        await act.Should().NotThrowAsync();
+    }
 }
