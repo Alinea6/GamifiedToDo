@@ -77,7 +77,29 @@ public class UserRepository : IUserRepository
 
         return users.Select(MapToUser);
     }
-    
+
+    public async Task RemoveFriend(string userId, string friendId, CancellationToken cancellationToken = default)
+    {
+        var user = await _dataContext.Users
+            .Where(u => u.Id == userId)
+            .FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+
+        if (user == null)
+        {
+            throw new Exception("Couldn't find user with id " + userId);
+        }
+
+        var friend = user.Friends.FirstOrDefault(f => f.Id == friendId);
+
+        if (friend == null)
+        {
+            throw new Exception($"User does not have friend with id {friendId}");
+        }
+
+        user.Friends.Remove(friend);
+        await _dataContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+    }
+
     private static User MapToUser(Models.User user)
     {
         return new User
