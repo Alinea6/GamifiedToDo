@@ -7,6 +7,7 @@ using GamifiedToDo.Services.App.Int.Users;
 using GamifiedToDo.Tests.Unit.Helpers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using Moq;
 using NUnit.Framework;
 
@@ -188,5 +189,18 @@ public class UserControllerTest
         var act = () => _sut.RemoveFriend(friendId);
 
         await act.Should().NotThrowAsync();
+    }
+
+    [Test]
+    public async Task GetUserFriends_should_call_user_service()
+    {
+        var expected = new UserFriends();
+
+        _userServiceMock.Setup(x => x.GetUserFriends(UserId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(expected);
+
+        var result = await _sut.GetUserFriends();
+
+        result.Should().Be(expected);
     }
 }

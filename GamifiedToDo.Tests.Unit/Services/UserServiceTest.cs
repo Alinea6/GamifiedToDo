@@ -133,4 +133,17 @@ public class UserServiceTest
 
         await act.Should().NotThrowAsync();
     }
+
+    [Test]
+    public async Task GetUserFriends_should_call_user_repository_and_return_user_friends()
+    {
+        var expected = new UserFriends();
+
+        _userRepositoryMock.Setup(x => x.GetUserFriends("fake-user-id", It.IsAny<CancellationToken>()))
+            .ReturnsAsync(expected);
+
+        var result = await _sut.GetUserFriends("fake-user-id");
+
+        result.Should().Be(expected);
+    }
 }
