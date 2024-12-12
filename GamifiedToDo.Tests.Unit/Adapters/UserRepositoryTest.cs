@@ -3,6 +3,7 @@ using FluentAssertions;
 using GamifiedToDo.Adapters.Data;
 using GamifiedToDo.Adapters.Data.Repositories;
 using GamifiedToDo.Services.App.Int.Users;
+using Microsoft.EntityFrameworkCore;
 using Moq;
 using NUnit.Framework;
 using User = GamifiedToDo.Adapters.Data.Models.User;
@@ -131,5 +132,38 @@ public class UserRepositoryTest
         
         enumerable.Count().Should().Be(1);
         enumerable.First().Login.Should().Be("fake-login-3");
+    }
+
+    [Test]
+    public async Task RemoveFriend_should_remove_friend_and_not_throw_error()
+    {
+        var user1 = await _context.Users.Include(x=> x.Friends)
+            .FirstAsync(x => x.Id == "fake-user-5");
+        var user2 = await _context.Users.Include(x=> x.Friends)
+            .FirstAsync(x => x.Id == "fake-user-6");
+        user1.Friends.Add(user2);
+        await _context.SaveChangesAsync();
+        
+        var act = () => _sut.RemoveFriend("fake-user-5", "fake-user-6");
+
+        await act.Should().NotThrowAsync();
+        user1.Friends.Count.Should().Be(0);
+    }
+    
+    [Test]
+    public async Task RemoveFriend_should_throw_error_when_user_does_not_exist()
+    {
+        
+        var act = () => _sut.RemoveFriend("fake-user-99", "fake-user-6");
+
+        await act.Should().ThrowAsync<Exception>().WithMessage("Couldn't find user with id fake-user-99");
+    }
+    
+    [Test]
+    public async Task RemoveFriend_should_throw_error_when_user_does_not_have_friend_with_given_id()
+    {
+        var act = () => _sut.RemoveFriend("fake-user-5", "fake-user-6");
+
+        await act.Should().ThrowAsync<Exception>().WithMessage("User does not have friend with id fake-user-6");
     }
 }

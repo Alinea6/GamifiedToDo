@@ -1,4 +1,3 @@
-using GamifiedToDo.API.Models;
 using GamifiedToDo.API.Models.Users;
 using GamifiedToDo.Services.App.Int.Users;
 using Microsoft.AspNetCore.Mvc;
@@ -63,7 +62,7 @@ public class UserController : ControllerBase
             }, cancellationToken);
     }
 
-    [HttpGet("friends/{requesterId}/accept")]
+    [HttpGet("friends/request/{requesterId}/accept")]
     public Task AcceptFriendRequest(string requesterId, CancellationToken cancellationToken = default)
     {
         return _userService.AcceptFriendRequest(new FriendRequestInput
@@ -73,12 +72,18 @@ public class UserController : ControllerBase
         }, cancellationToken);
     }
     
-    [HttpGet("friends/{requestId}/remove")]
+    [HttpGet("friends/request/{requestId}/remove")]
     public Task RemoveFriendRequest(string requestId, CancellationToken cancellationToken = default)
     {
         return _userService.RemoveFriendRequest(
             requestId,
             GetUserId(),
             cancellationToken);
+    }
+
+    [HttpGet("friends/{friendId}/remove")]
+    public Task RemoveFriend(string friendId, CancellationToken cancellationToken = default)
+    {
+        return _userService.RemoveFriend(GetUserId(), friendId, cancellationToken);
     }
 }
