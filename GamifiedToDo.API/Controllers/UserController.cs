@@ -86,4 +86,10 @@ public class UserController : ControllerBase
     {
         return _userService.RemoveFriend(GetUserId(), friendId, cancellationToken);
     }
+
+    [HttpGet("friends")]
+    public Task<UserFriends> GetUserFriends(CancellationToken cancellationToken = default)
+    {
+        return _userService.GetUserFriends(GetUserId(), cancellationToken);
+    }
 }

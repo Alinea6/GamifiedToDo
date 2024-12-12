@@ -51,4 +51,9 @@ public class UserService : IUserService
     {
         return _userRepository.RemoveFriend(userId, friendId, cancellationToken);
     }
+
+    public Task<UserFriends> GetUserFriends(string userId, CancellationToken cancellationToken = default)
+    {
+        return _userRepository.GetUserFriends(userId, cancellationToken);
+    }
 }

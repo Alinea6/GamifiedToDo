@@ -100,6 +100,24 @@ public class UserRepository : IUserRepository
         await _dataContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
     }
 
+    public async Task<UserFriends> GetUserFriends(string userId, CancellationToken cancellationToken = default)
+    {
+        var user = await _dataContext.Users
+            .Where(u => u.Id == userId)
+            .FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+
+        if (user == null)
+        {
+            throw new Exception($"User with id {userId} was not found");
+        }
+
+        return new UserFriends
+        {
+            UserId = user.Id,
+            Friends = user.Friends.Select(MapToUser)
+        };
+    }
+
     private static User MapToUser(Models.User user)
     {
         return new User

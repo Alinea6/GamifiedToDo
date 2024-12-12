@@ -166,4 +166,32 @@ public class UserRepositoryTest
 
         await act.Should().ThrowAsync<Exception>().WithMessage("User does not have friend with id fake-user-6");
     }
+    
+    [Test]
+    public async Task GetUserFriends_should_find_user_and_return_UserFriends()
+    {
+        var expected = new UserFriends
+        {
+            UserId = "fake-user-5",
+            Friends = new List<GamifiedToDo.Services.App.Int.Users.User>
+            {
+                new()
+                {
+                    Id = "fake-user-6",
+                    Login = "fake-login-2"
+                }
+            }
+        };
+        
+        var user1 = await _context.Users.Include(x=> x.Friends)
+            .FirstAsync(x => x.Id == "fake-user-5");
+        var user2 = await _context.Users.Include(x=> x.Friends)
+            .FirstAsync(x => x.Id == "fake-user-6");
+        user1.Friends.Add(user2);
+        await _context.SaveChangesAsync();
+        
+        var result = await _sut.GetUserFriends("fake-user-5");
+
+        result.Should().BeEquivalentTo(expected);
+    }
 }
